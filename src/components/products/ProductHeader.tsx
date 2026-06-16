@@ -1,20 +1,11 @@
-import { useNavigate } from "react-router-dom";
 import "../../styles/product.css"
+import BackButton from "../layouts/BackButton";
 
 const ProductHeader = () => {
-
-    const navigate = useNavigate();
-
     return (
         <div className="product-header">
 
-            <button
-                className="back-btn"
-                onClick={() => navigate("/")}
-            >
-                <i className="fa-solid fa-arrow-left"></i>
-                Back to Home
-            </button>
+            <BackButton />
 
             <h1 className="product-title">
                 Products

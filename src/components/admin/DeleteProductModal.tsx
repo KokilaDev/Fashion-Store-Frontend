@@ -11,15 +11,17 @@ const DeleteProductModal = ({
 }: Props) => {
   return (
     <div className="modal">
-      <h3>Delete Product?</h3>
+      <div className="modal-content">
+        <h3>Delete Product?</h3>
 
-      <button onClick={onDelete}>
-        Yes
-      </button>
+        <button onClick={onDelete}>
+          Yes
+        </button>
 
-      <button onClick={onClose}>
-        Cancel
-      </button>
+        <button onClick={onClose}>
+          Cancel
+        </button>
+      </div>
     </div>
   );
 };

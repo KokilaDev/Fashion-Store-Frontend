@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import AddProductForm from "../../components/admin/AddProductForm";
 import ProductInventory from "../../components/admin/ProductInventory";
 import type { AdminProduct } from "../../types/Product";
+import { addProduct, deleteProduct, getAllProducts, updateProduct } from "../../api/productApi";
+import DeleteProductModal from "../../components/admin/DeleteProductModal";
 
 const AddProduct = () => {
   const [product, setProduct] = useState<AdminProduct>({
@@ -17,11 +18,13 @@ const AddProduct = () => {
 
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [isEdit, setIsEdit] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState<string>("");
 
   useEffect(() => {
     const loadProducts = async () => {
         try {
-            const res = await axios.get("http://localhost:5000/api/v1/products/all")
+            const res = await getAllProducts();
             setProducts(res.data.products)
         } catch (err) {
             console.error("Failed to load products:", err);
@@ -64,26 +67,14 @@ const AddProduct = () => {
     }
 
     if (isEdit) {
-        await axios.put(
-            `http://localhost:5000/api/v1/products/update/${product._id}`,
-            formData
-        )
-
+        await updateProduct(product._id, formData);
         setIsEdit(false)
     } else {
-        const res = await axios.post(
-            "http://localhost:5000/api/v1/products/add",
-            formData,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            }
-        );
+        const res = await addProduct(formData);
         setProducts((prev) => [...prev, res.data.product]);
     }
 
-    const res = await axios.get("http://localhost:5000/api/v1/products/all")
+    const res = await getAllProducts();
     setProducts(res.data.products)
 
     setProduct({
@@ -98,21 +89,37 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="box-container">
-      <AddProductForm
-        product={product}
-        handleChange={handleChange}
-        handleImageChange={handleImageChange}
-        handleSubmit={handleSubmit}
-        isEdit={isEdit}
-      />
+    <>
+      <div className="box-container">
+        <AddProductForm
+          product={product}
+          handleChange={handleChange}
+          handleImageChange={handleImageChange}
+          handleSubmit={handleSubmit}
+          isEdit={isEdit}
+        />
 
-      <ProductInventory 
-        products={products}
-        setProduct={setProduct}
-        setIsEdit={setIsEdit}
-      />
-    </div>
+        <ProductInventory 
+          products={products}
+          setProduct={setProduct}
+          setIsEdit={setIsEdit}
+          setDeleteId={setDeleteId}
+          setShowDeleteModal={setShowDeleteModal}
+        />
+      </div>
+      {showDeleteModal && (
+        <DeleteProductModal
+          onClose={() => setShowDeleteModal(false)}
+          onDelete={async () => {
+            await deleteProduct(deleteId);
+            setShowDeleteModal(false);
+
+            const res = await getAllProducts();
+            setProducts(res.data.products);
+          }}
+        />
+      )}
+    </>
   );
 };
 

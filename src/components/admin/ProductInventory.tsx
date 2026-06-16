@@ -2,23 +2,15 @@ import StockIndicator from "./StockIndicator";
 import "../../styles/product.css"
 import type { AdminProduct } from "../../types/Product";
 
-// type AdminProduct = {
-//   _id: string;
-//   name: string;
-//   category: string;
-//   price: number;
-//   stock: number;
-//   description: string;
-//   image: File | null;
-// };
-
 type Props = {
   products: AdminProduct[];
   setProduct: (p: AdminProduct) => void;
   setIsEdit: (v: boolean) => void;
+  setDeleteId: (id: string) => void;
+  setShowDeleteModal: (v: boolean) => void;
 };
 
-const ProductInventory = ({ products, setProduct, setIsEdit }: Props) => {
+const ProductInventory = ({ products, setProduct, setIsEdit, setDeleteId, setShowDeleteModal }: Props) => {
   const openEdit = (product: AdminProduct) => {
     console.log("Editing Product:", product);
     setProduct(product)
@@ -26,7 +18,7 @@ const ProductInventory = ({ products, setProduct, setIsEdit }: Props) => {
   }
 
   return (
-    <div>
+    <div className="inventory-container">
         <table className="product-table">
             <thead>
                 <tr>
@@ -36,6 +28,8 @@ const ProductInventory = ({ products, setProduct, setIsEdit }: Props) => {
                 <th>Stock</th>
                 <th>Status</th>
                 <th>Image</th>
+                <th></th>
+                <th></th>
                 </tr>
             </thead>
 
@@ -52,17 +46,31 @@ const ProductInventory = ({ products, setProduct, setIsEdit }: Props) => {
                     </td>
 
                     <td>
-                    {p.image && (
-                        <img
-                        src={`http://localhost:5000/uploads/${p.image}`}
-                        width="50"
-                        alt={p.name}
-                        />
-                    )}
+                        {p.image && (
+                            <img
+                            src={`http://localhost:5000/uploads/${p.image}`}
+                            width="50"
+                            alt={p.name}
+                            />
+                        )}
                     </td>
                     <td>
-                        <button onClick={() => openEdit(p)}>
+                        <button 
+                            className="btnEdit" 
+                            onClick={() => openEdit(p)}
+                        >
                             Edit
+                        </button>
+                    </td>
+                    <td>
+                        <button 
+                            className="btnDelete" 
+                            onClick={() => {
+                                setDeleteId(p._id);
+                                setShowDeleteModal(true);
+                            }}
+                        >
+                            Delete
                         </button>
                     </td>
                 </tr>
