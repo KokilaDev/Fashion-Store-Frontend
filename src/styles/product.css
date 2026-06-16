@@ -222,41 +222,10 @@
     color:var(--brown);
 }
 
-.product-buttons{
-    display:flex;
-    justify-content:end;
-    gap:15px;
-}
-
 .icon-btn {
     background: transparent;
     border: none;
     cursor: pointer;
-}
-
-.list-view i {
-    color: var(--brown);
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 4px;
-}
-
-.grid-2 i,
-.grid-3 i,
-.grid-4 i {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: var(--brown);
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-.list-view i:hover, 
-.grid-2 i:hover,
-.grid-3 i:hover,
-.grid-4 i:hover {
-    color: var(--soft-pink);
 }
 
 .divider {
@@ -361,12 +330,6 @@
     gap: 20px;
 }
 
-/* .product-grid.list-view {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-} */
-
 .product-card {
     background: white;
     border-radius: 15px;
@@ -404,6 +367,7 @@
     text-align: center;
     cursor: pointer;
     font-size: 16px;
+    color: var(--brown);
 }
 
 .more-options-container i:hover {
@@ -660,4 +624,40 @@
     transform: scale(1);
     opacity: 1;
   }
+}
+
+.product-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.product-buttons button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.product-buttons button i {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--brown);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.product-buttons button i:hover {
+    color: var(--soft-pink);
+}
+
+.product-buttons button.active {
+    background: var(--brown);
+    border-color: var(--brown);
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.product-buttons button.active i {
+    color: white;
 }

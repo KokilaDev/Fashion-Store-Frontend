@@ -25,7 +25,14 @@ const ProductCard = ({
                 />
             </div>
 
-            <img src={product.image} alt={product.name} />
+            <img 
+                src={
+                    product.image
+                    ? `http://localhost:5000/uploads/${product.image}`
+                    : "/placeholder.png"
+                }
+                alt={product.name} 
+            />
 
             <div className="product-info">
                 <h3>{product.name}</h3>
@@ -42,7 +49,6 @@ const ProductCard = ({
                 <h4>Rs. {product.price}</h4>
 
                 <button onClick={onAddToCart}>
-                    <i className="fa-solid fa-cart-plus"></i>
                     Add to Cart
                 </button>
             </div>

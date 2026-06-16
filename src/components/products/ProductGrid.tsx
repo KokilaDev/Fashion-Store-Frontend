@@ -4,8 +4,8 @@ import "../../styles/product.css"
 
 type Props = {
     products: Product[];
-    favorites: number[];
-    toggleFavorite: (id: number) => void;
+    favorites: string[];
+    toggleFavorite: (id: string) => void;
     addToCart: (product: Product) => void;
     gridView: number;
 };
@@ -27,11 +27,11 @@ const ProductGrid = ({
         >
             {products.map((product) => (
                 <ProductCard
-                    key={product.id}
+                    key={product._id}
                     product={product}
-                    isFavorite={favorites.includes(product.id)}
+                    isFavorite={favorites.includes(product._id)}
                     onFavorite={() =>
-                        toggleFavorite(product.id)
+                        toggleFavorite(product._id)
                     }
                     onAddToCart={() =>
                         addToCart(product)
