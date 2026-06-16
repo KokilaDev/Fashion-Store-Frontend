@@ -17,13 +17,19 @@ const ProductImageUploader = ({ image, onImageChange }: Props) => {
         className="file-input"
       />
 
-      {image && (
+      {image instanceof File ? (
         <img
           src={URL.createObjectURL(image)}
           alt="preview"
           width="120"
         />
-      )}
+      ) : typeof image === "string" ? (
+        <img
+          src={`http://localhost:5000/uploads/${image}`}
+          alt="preview"
+          width="120"
+        />
+      ) : null}
     </div>
   );
 };

@@ -7,6 +7,7 @@ const AddProductForm = ({
   handleChange,
   handleImageChange,
   handleSubmit,
+  isEdit
 }: any) => {
   return (
     <form onSubmit={handleSubmit} className="add-product-form">
@@ -73,7 +74,7 @@ const AddProductForm = ({
         />
 
         <button type="submit">
-            Add Product
+            {isEdit ? "Update Product" : "Add Product"}
         </button>
       </div>
 

@@ -1,5 +1,5 @@
 export interface Product {
-  id: number;
+  _id: string;
   name: string;
   description: string;
   price: number;
@@ -10,11 +10,11 @@ export interface Product {
 }
 
 export interface AdminProduct {
-  id?: number;
+  _id: string;
   name: string;
   category: string;
   description: string;
   price: number;
   stock: number;
-  image: File | null;
+  image: string | File | null;
 }

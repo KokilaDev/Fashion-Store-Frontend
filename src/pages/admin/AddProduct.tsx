@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import AddProductForm from "../../components/admin/AddProductForm";
 import ProductInventory from "../../components/admin/ProductInventory";
@@ -6,6 +6,7 @@ import type { AdminProduct } from "../../types/Product";
 
 const AddProduct = () => {
   const [product, setProduct] = useState<AdminProduct>({
+    _id: "",
     name: "",
     category: "",
     price: 0,
@@ -15,6 +16,23 @@ const AddProduct = () => {
   });
 
   const [products, setProducts] = useState<AdminProduct[]>([]);
+  const [isEdit, setIsEdit] = useState(false);
+
+  useEffect(() => {
+    const loadProducts = async () => {
+        try {
+            const res = await axios.get("http://localhost:5000/api/v1/products/all")
+            setProducts(res.data.products)
+        } catch (err) {
+            console.error("Failed to load products:", err);
+        }
+    }
+    loadProducts();
+  }, []);
+
+  useEffect(() => {
+    console.log("Current Product:", product);
+  }, [product]);
 
   const handleChange = (e: any) => {
     setProduct({
@@ -34,6 +52,7 @@ const AddProduct = () => {
     e.preventDefault();
 
     const formData = new FormData();
+    
     formData.append("name", product.name);
     formData.append("category", product.category);
     formData.append("price", product.price.toString());
@@ -44,17 +63,38 @@ const AddProduct = () => {
         formData.append("image", product.image);
     }
 
-    const res = await axios.post(
-        "http://localhost:5000/api/v1/products/add",
-        formData,
-        {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        }
-    );
+    if (isEdit) {
+        await axios.put(
+            `http://localhost:5000/api/v1/products/update/${product._id}`,
+            formData
+        )
 
-    setProducts((prev) => [...prev, res.data.product]);
+        setIsEdit(false)
+    } else {
+        const res = await axios.post(
+            "http://localhost:5000/api/v1/products/add",
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }
+        );
+        setProducts((prev) => [...prev, res.data.product]);
+    }
+
+    const res = await axios.get("http://localhost:5000/api/v1/products/all")
+    setProducts(res.data.products)
+
+    setProduct({
+        _id: "",
+        name: "",
+        category: "",
+        price: 0,
+        stock: 0,
+        description: "",
+        image: null,
+    })
   };
 
   return (
@@ -64,9 +104,14 @@ const AddProduct = () => {
         handleChange={handleChange}
         handleImageChange={handleImageChange}
         handleSubmit={handleSubmit}
+        isEdit={isEdit}
       />
 
-      <ProductInventory products={products} />
+      <ProductInventory 
+        products={products}
+        setProduct={setProduct}
+        setIsEdit={setIsEdit}
+      />
     </div>
   );
 };
