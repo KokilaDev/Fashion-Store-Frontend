@@ -1,31 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-    --gold: #B08401;
-    --soft-pink: #D49E8D;
-    --beige: #DED1BD;
-    --white-smoke: #FAF6F2;
-    --brown: #683B2B;
-}
-
-html,
-body,
-#root {
-    width: 100%;
-    min-height: 100vh;
-    font-family: 'Poppins', sans-serif;
-}
-
-body {
-    background: linear-gradient(135deg, var(--white-smoke), var(--beige));
-    overflow-x: hidden;
-}
+@import "base.css";
 
 .auth-container {
   min-height: 100vh;

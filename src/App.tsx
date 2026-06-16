@@ -1,10 +1,13 @@
 import { AuthProvider } from "./context/AuthContext";
+import { CartProvider } from "./context/CartContext";
 import Router from "./routes/AppRoutes";
 
 const App = () => {
   return (
     <AuthProvider>
-      <Router />
+      <CartProvider>
+        <Router />
+      </CartProvider>
     </AuthProvider>
   );
 };
