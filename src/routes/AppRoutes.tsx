@@ -9,6 +9,7 @@ const Dashboard = lazy(() => import("../pages/Dashboard"))
 const Products = lazy(() => import("../pages/Products"))
 const AddProduct = lazy(() => import("../pages/admin/AddProduct"))
 const WishList = lazy(() => import("../pages/WishList"))
+const Cart = lazy(() => import("../pages/CartPage"))
 
 type RequireAuthTypes = {
     children: ReactNode
@@ -60,6 +61,7 @@ const Router = () => {
           <Route path="/products" element={ <RequireAuth><Products /> </RequireAuth> } />
           <Route path="/wishlist" element={ <RequireAuth><WishList /> </RequireAuth> } />
           <Route path="/admin/addProduct" element={ <RequireAuth roles={["ADMIN"]}><AddProduct /> </RequireAuth> } />
+          <Route path="/cart" element={ <RequireAuth><Cart /> </RequireAuth> } />
         </Routes>
       </Suspense>
     </BrowserRouter>

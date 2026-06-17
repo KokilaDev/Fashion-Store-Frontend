@@ -1,14 +1,24 @@
 import "../../styles/wishlist.css";
 
-const EmptyList = () => {
+const EmptyList = ({ isCart }: { isCart?: boolean }) => {
+  const isCartView = isCart;
+
   return (
     <div className="empty-list">
-      <i className="fa-regular fa-heart empty-icon"></i>
+      <i
+        className={
+          isCartView
+            ? "fa-solid fa-cart-shopping empty-icon"
+            : "fa-regular fa-heart empty-icon"
+        }
+      />
 
-      <h2>No Wishlist Items</h2>
+      <h2>{isCartView ? "No Cart Items" : "No Wishlist Items"}</h2>
 
       <p>
-        You haven't added any products to your wishlist yet.
+        {isCartView
+          ? "You haven't added any products to your cart yet."
+          : "You haven't added any products to your wishlist yet."}
       </p>
     </div>
   );

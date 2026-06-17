@@ -228,7 +228,7 @@
     cursor: pointer;
 }
 
-.divider {
+.product-divider {
     border: none;
     border-top: 1px solid rgba(104, 59, 43, 0.15);
     margin: 15px 0;

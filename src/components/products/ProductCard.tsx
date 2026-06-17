@@ -3,14 +3,17 @@ import { useWishlist } from "../../hooks/useWishlist";
 import AddToWishlistButton from "../wishlist/AddToWishlistButton";
 import AddToCartBtn from "../layouts/AddToCartBtn";
 import "../../styles/product.css";
+import { addToCart } from "../../api/cartApi";
+import { useCart } from "../../hooks/useCart";
 
 type Props = {
   product: Product;
-  onAddToCart: () => void;
 };
 
-const ProductCard = ({ product, onAddToCart }: Props) => {
+const ProductCard = ({ product }: Props) => {
   const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
+
+  const { refreshCart } = useCart();
 
   const isFavorite = wishlist.some(
     (item: any) => item.productId?._id === product._id
@@ -24,8 +27,25 @@ const ProductCard = ({ product, onAddToCart }: Props) => {
     }
   };
 
-//   console.log("Wishlist:", wishlist);
-//   console.log("Product:", product._id);
+  const userId = "USER_001";
+
+  const handleAddToCart = async (product: any) => {
+    try {
+      await addToCart({
+        userId,
+        product: {
+          productId: product._id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          qty: 1,
+        }
+      })
+      await refreshCart();
+    } catch (err) {
+      console.error("Failed to add to cart", err);
+    }
+  }
 
   return (
     <div className="product-card">
@@ -57,7 +77,7 @@ const ProductCard = ({ product, onAddToCart }: Props) => {
 
         <h4>Rs. {product.price}</h4>
 
-        <AddToCartBtn onClick={onAddToCart} />
+        <AddToCartBtn onClick={() => handleAddToCart(product)} />
       </div>
     </div>
   );

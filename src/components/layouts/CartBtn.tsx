@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../../context/CartContext";
+import { useCart } from "../../hooks/useCart";
 import "../../styles/product.css"
 
 const CartBtn = () => {
     const navigate = useNavigate();
 
     const { cartItems } = useCart();
+
+    console.log("Cart Items", cartItems);
 
     const cartCount = cartItems.reduce(
         (total, item) => total + (item.qty || 0),

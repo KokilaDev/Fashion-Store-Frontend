@@ -5,10 +5,11 @@ import ProductGrid from "../components/products/ProductGrid";
 
 import CartBtn from "../components/layouts/CartBtn";
 
-import { useCart } from "../context/CartContext";
+import { useCart } from "../hooks/useCart";
 import BackButton from "../components/layouts/BackButton";
 import type { Product } from "../types/Product";
 import { getAllProducts } from "../api/productApi";
+import { addToCart as addToCartApi } from "../api/cartApi";
 import "../styles/product.css"
 
 const Products = () => {
@@ -18,7 +19,25 @@ const Products = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const [category, setCategory] = useState("All");
 
-    const { addToCart } = useCart();
+    const { refreshCart } = useCart();
+
+    const handleAddToCart = async (product: Product) => {
+        try {
+            await addToCartApi({
+                userId: "USER_001",
+                product: {
+                    productId: product._id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    qty: 1,
+                }
+            });
+            await refreshCart();
+        } catch (err) {
+            console.error("Failed to add to cart", err);
+        }
+    }
 
     useEffect(() => {
         const loadProducts = async () => {
@@ -64,6 +83,8 @@ const Products = () => {
 
                 </div>
 
+                <div className="product-divider"></div>
+
                 <div className="product-content">
 
                     <ProductFilter
@@ -73,7 +94,7 @@ const Products = () => {
 
                     <ProductGrid
                         products={products}
-                        addToCart={addToCart}
+                        addToCart={handleAddToCart}
                         gridView={gridView}
                     />
 

@@ -1,9 +1,10 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import type { Product } from "../types/Product";
+import { getCart } from "../api/cartApi";
 
 type CartContextType = {
     cartItems: Product[];
-    addToCart: (product: Product) => void;
+    refreshCart: () => Promise<void>;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -11,38 +12,40 @@ const CartContext = createContext<CartContextType | null>(null);
 export const CartProvider = ({ children }: any) => {
     const [cartItems, setCartItems] = useState<Product[]>([]);
 
-    const addToCart = (product: Product) => {
-        setCartItems((prev) => {
-            const exists = prev.find(
-                (item) => item._id === product._id
-            );
+    const userId = "USER_001";
 
-            if (exists) {
-                return prev.map((item) =>
-                    item._id === product._id
-                        ? {
-                              ...item,
-                              qty: (item.qty || 1) + 1,
-                          }
-                        : item
-                );
+    const refreshCart = async () => {
+        try {
+            const res = await getCart(userId);
+            console.log("Cart data", res.data);
+            setCartItems(res.data.items || []);
+        } catch (error) {
+            console.error("Error fetching cart:", error);
+        }
+    }
+
+    useEffect(() => {
+        const loadCart = async () => {
+            try {
+                const res = await getCart(userId);
+                setCartItems(res.data.items || []);
+            } catch (error) {
+                console.error("Error fetching cart:", error);
             }
+        }
 
-            return [
-                ...prev,
-                {
-                    ...product,
-                    qty: 1,
-                },
-            ];
-        });
-    };
+        loadCart();
+    }, [userId]);
+
+    useEffect(() => {
+        console.log("Cart items updated", cartItems);
+    }, [cartItems]);
 
     return (
         <CartContext.Provider
             value={{
                 cartItems,
-                addToCart,
+                refreshCart,
             }}
         >
             {children}
@@ -50,10 +53,4 @@ export const CartProvider = ({ children }: any) => {
     );
 };
 
-export const useCart = () => {
-    const context = useContext(CartContext);
-
-    if (!context) throw new Error("useCart must be used inside CartProvider");
-
-    return context;
-};
+export default CartContext;
