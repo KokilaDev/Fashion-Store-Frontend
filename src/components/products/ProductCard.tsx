@@ -1,5 +1,5 @@
 import type { Product } from "../../types/Product";
-import { useWishlist } from "../../context/WishlistContext";
+import { useWishlist } from "../../hooks/useWishlist";
 import AddToWishlistButton from "../wishlist/AddToWishlistButton";
 import AddToCartBtn from "../layouts/AddToCartBtn";
 import "../../styles/product.css";

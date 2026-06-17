@@ -1,6 +1,5 @@
 import {
   createContext,
-  useContext,
   useEffect,
   useState,
   type ReactNode,
@@ -66,8 +65,4 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useWishlist = () => {
-  const context = useContext(WishlistContext);
-  if (!context) throw new Error("useWishlist must be used inside provider");
-  return context;
-};
+export default WishlistContext;

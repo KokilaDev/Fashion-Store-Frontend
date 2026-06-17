@@ -24,16 +24,16 @@
   grid-template-columns: 300px 1fr;
   gap: 40px;
   align-items: start;
-  min-height: 60vh;
+  min-height: 70vh;
 }
 
 .wishlist-card {
   display: flex;
-  gap: 20px;
+  gap: 50px;
 }
 
 .wishlist-item {
-  min-width: 250px;
+  width: 16rem;
   flex: 0 0 auto;
   background: white;
   border-radius: 15px;
@@ -145,12 +145,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 60vh;
+  min-height: 70vh;
 }
 
 .empty-list {
   width: 100%;
-  min-height: 60vh;
+  min-height: 70vh;
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -12,6 +12,14 @@ const WishlistItem = ({
   onRemove,
   onAddToCart,
 }: Props) => {
+
+  const imgUrl = product.productId?.image
+    ? `http://localhost:5000/uploads/${product.productId.image}`
+    : "/placeholder.png";
+
+  console.log("PRODUCT:", product);
+  console.log("IMAGE:", product.productId?.image);
+
   return (
     <div className="wishlist-item">
 
@@ -25,25 +33,21 @@ const WishlistItem = ({
       </div>
 
       <img
-        src={
-          product.image
-          ? `http://localhost:5000/uploads/${product.image}`
-          : "/placeholder.png"
-        }
-        alt={product.name || "Product Image"}
+        src={imgUrl}
+        alt={product.productId?.name || "Product Image"}
       />
 
       <div className="wishlist-item-info">
-        <h3>{product.name}</h3>
+        <h3>{product.productId?.name}</h3>
 
         <p className="wishlist-desc">
-            {(product.description ?? "")
+            {(product.productId?.description ?? "")
               .split(" ")
               .slice(0, 15)
               .join(" ")}...
         </p>
 
-        <h4>Rs. {product.price}</h4>
+        <h4>Rs. {product.productId?.price}</h4>
 
         <AddToCartBtn onClick={onAddToCart} />
       </div>
