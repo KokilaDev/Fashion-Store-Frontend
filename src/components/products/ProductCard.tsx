@@ -1,59 +1,66 @@
-import FavoriteButton from "./FavoriteButton";
 import type { Product } from "../../types/Product";
-import "../../styles/product.css"
+import { useWishlist } from "../../context/WishlistContext";
+import AddToWishlistButton from "../wishlist/AddToWishlistButton";
+import AddToCartBtn from "../layouts/AddToCartBtn";
+import "../../styles/product.css";
 
 type Props = {
-    product: Product;
-    isFavorite: boolean;
-    onFavorite: () => void;
-    onAddToCart: () => void;
+  product: Product;
+  onAddToCart: () => void;
 };
 
-const ProductCard = ({
-    product,
-    isFavorite,
-    onFavorite,
-    onAddToCart,
-}: Props) => {
-    return (
-        <div className="product-card">
+const ProductCard = ({ product, onAddToCart }: Props) => {
+  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
 
-            <div className="more-options-container">
-                <FavoriteButton
-                    isFavorite={isFavorite}
-                    onClick={onFavorite}
-                />
-            </div>
+  const isFavorite = wishlist.some(
+    (item: any) => item.productId?._id === product._id
+  );
 
-            <img 
-                src={
-                    product.image
-                    ? `http://localhost:5000/uploads/${product.image}`
-                    : "/placeholder.png"
-                }
-                alt={product.name} 
-            />
+  const toggleWishlist = () => {
+    if (isFavorite) {
+      removeFromWishlist(product._id);
+    } else {
+      addToWishlist(product);
+    }
+  };
 
-            <div className="product-info">
-                <h3>{product.name}</h3>
+//   console.log("Wishlist:", wishlist);
+//   console.log("Product:", product._id);
 
-                <p className="product-description">
-                    {product.description.split(" ").length > 15
-                        ? product.description
-                              .split(" ")
-                              .slice(0, 15)
-                              .join(" ") + "..."
-                        : product.description}
-                </p>
+  return (
+    <div className="product-card">
+      <div className="more-options-container">
+        <AddToWishlistButton
+          isFavorite={isFavorite}
+          onClick={toggleWishlist}
+        />
+      </div>
 
-                <h4>Rs. {product.price}</h4>
+      <img
+        src={
+          product.image
+            ? `http://localhost:5000/uploads/${product.image}`
+            : "/placeholder.png"
+        }
+        alt={product.name}
+      />
 
-                <button onClick={onAddToCart}>
-                    Add to Cart
-                </button>
-            </div>
-        </div>
-    );
+      <div className="product-info">
+        <h3>{product.name}</h3>
+
+        <p>
+          {product.description
+            .split(" ")
+            .slice(0, 15)
+            .join(" ")}...
+        </p>
+
+        <h4>Rs. {product.price}</h4>
+
+        <AddToCartBtn onClick={onAddToCart} />
+      </div>
+    </div>
+  );
 };
 
 export default ProductCard;

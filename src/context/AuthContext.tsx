@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import { getMyDetails } from "../services/auth";
 
 export const AuthContext = createContext<any>(null)
 

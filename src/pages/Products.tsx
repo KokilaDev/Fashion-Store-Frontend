@@ -15,19 +15,10 @@ const Products = () => {
 
     const [gridView, setGridView] = useState(3);
 
-    const [favorites, setFavorites] = useState<string[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
     const [category, setCategory] = useState("All");
 
     const { addToCart } = useCart();
-
-    const toggleFavorite = (id: string) => {
-        setFavorites((prev) =>
-            prev.includes(id)
-                ? prev.filter((item) => item !== id)
-                : [...prev, id]
-        );
-    };
 
     useEffect(() => {
         const loadProducts = async () => {
@@ -82,8 +73,6 @@ const Products = () => {
 
                     <ProductGrid
                         products={products}
-                        favorites={favorites}
-                        toggleFavorite={toggleFavorite}
                         addToCart={addToCart}
                         gridView={gridView}
                     />

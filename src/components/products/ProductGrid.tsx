@@ -4,16 +4,12 @@ import "../../styles/product.css"
 
 type Props = {
     products: Product[];
-    favorites: string[];
-    toggleFavorite: (id: string) => void;
     addToCart: (product: Product) => void;
     gridView: number;
 };
 
 const ProductGrid = ({
     products,
-    favorites,
-    toggleFavorite,
     addToCart,
     gridView,
 }: Props) => {
@@ -29,10 +25,6 @@ const ProductGrid = ({
                 <ProductCard
                     key={product._id}
                     product={product}
-                    isFavorite={favorites.includes(product._id)}
-                    onFavorite={() =>
-                        toggleFavorite(product._id)
-                    }
                     onAddToCart={() =>
                         addToCart(product)
                     }
