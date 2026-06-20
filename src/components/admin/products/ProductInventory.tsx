@@ -1,6 +1,6 @@
-import StockIndicator from "./StockIndicator";
-import "../../styles/product.css"
-import type { AdminProduct } from "../../types/Product";
+import StockIndicator from "../products/StockIndicator";
+import "../../../styles/product.css";
+import type { AdminProduct } from "../../../types/Product";
 
 type Props = {
   products: AdminProduct[];

@@ -7,15 +7,15 @@
 }
 
 .add-product-header {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 }
 
 .add-product-header h1 {
-    font-size:32px;
-    font-weight:700;
-    color:var(--brown);
+  font-size:32px;
+  font-weight:700;
+  color:var(--brown);
 }
 
 .section-column {
@@ -34,7 +34,6 @@
 .section-row {
   display: flex;
   flex-direction: row;
-  gap: 20px;
 }
 
 .form-group {
@@ -76,30 +75,30 @@
 }
 
 .file-input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #d8c5b3;
-    border-radius: 12px;
-    background: #fffaf5;
-    color: #5a3d2b;
-    font-size: 15px;
-    cursor: pointer;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d8c5b3;
+  border-radius: 12px;
+  background: #fffaf5;
+  color: #5a3d2b;
+  font-size: 15px;
+  cursor: pointer;
 }
 
 .file-input::file-selector-button {
-    background: var(--white-smoke);
-    color: var(--brown);
-    border: none;
-    padding: 10px 18px;
-    border-radius: 8px;
-    margin-right: 12px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: 0.3s;
+  background: var(--white-smoke);
+  color: var(--brown);
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  margin-right: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
 }
 
 .file-input::file-selector-button:hover {
-    opacity: 0.9;
+  opacity: 0.9;
 }
 
 .add-product-form button {

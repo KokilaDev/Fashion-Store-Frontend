@@ -8,6 +8,7 @@ const Register = lazy(() => import("../pages/auth/Register"))
 const Dashboard = lazy(() => import("../pages/Dashboard"))
 const Products = lazy(() => import("../pages/Products"))
 const AddProduct = lazy(() => import("../pages/admin/AddProduct"))
+const AddCoupon = lazy(() => import("../pages/admin/AddCoupon"))
 const WishList = lazy(() => import("../pages/WishList"))
 const Cart = lazy(() => import("../pages/CartPage"))
 const Profile = lazy(() => import("../pages/Profile"))
@@ -64,6 +65,7 @@ const Router = () => {
           <Route path="/products" element={ <RequireAuth><Products /> </RequireAuth> } />
           <Route path="/wishlist" element={ <RequireAuth><WishList /> </RequireAuth> } />
           <Route path="/admin/addProduct" element={ <RequireAuth roles={["ADMIN"]}><AddProduct /> </RequireAuth> } />
+          <Route path="/admin/addCoupon" element={ <RequireAuth roles={["ADMIN"]}><AddCoupon /> </RequireAuth> } />
           <Route path="/cart" element={ <RequireAuth><Cart /> </RequireAuth> } />
           <Route path="/profile" element={ <RequireAuth><Profile /> </RequireAuth> } />
           <Route path="/checkout" element={ <RequireAuth><Checkout /> </RequireAuth> } />

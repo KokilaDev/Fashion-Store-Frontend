@@ -1,4 +1,4 @@
-import "../../styles/product.css"
+import "../../../styles/product.css"
 
 type Props = {
   image: File | null;
