@@ -20,7 +20,10 @@ export const AuthProvider = ({ children }: any) => {
                 const res = await getMyDetails()
 
                 if (res.data) {
-                    setUser(res.data)
+                    setUser({
+                        _id: res.data.id,
+                        ...res.data
+                    })
                 } else {
                     setUser(null)
                 }

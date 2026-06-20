@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom"
+import Logout from "../components/auth/Logout"
 
 const Dashboard = () => {
     const navigate = useNavigate()
@@ -14,6 +15,7 @@ const Dashboard = () => {
             >
                 Add Products
             </button>
+            <Logout />
         </div>
     )
 }

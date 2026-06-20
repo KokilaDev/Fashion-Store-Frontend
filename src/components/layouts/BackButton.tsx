@@ -5,13 +5,17 @@ import "../../styles/base.css";
 const BackButton = () => {
   const navigate = useNavigate();
 
+  const handleClick = () => {
+    console.log("BackButton clicked");
+    navigate(-1);
+  };
+
   return (
     <button
       className="back-btn"
-      onClick={() => navigate(-1)}
+      onClick={handleClick}
     >
       <FaArrowLeft />
-      Back
     </button>
   );
 };

@@ -11,6 +11,7 @@ import type { Product } from "../types/Product";
 import { getAllProducts } from "../api/productApi";
 import { addToCart as addToCartApi } from "../api/cartApi";
 import "../styles/product.css"
+import { useAuth } from "../hooks/useAuth";
 
 const Products = () => {
 
@@ -20,11 +21,14 @@ const Products = () => {
     const [category, setCategory] = useState("All");
 
     const { refreshCart } = useCart();
+    const { user } = useAuth();
 
     const handleAddToCart = async (product: Product) => {
         try {
+            if (!user?._id) return;
+            
             await addToCartApi({
-                userId: "USER_001",
+                userId: user?._id,
                 product: {
                     productId: product._id,
                     name: product.name,

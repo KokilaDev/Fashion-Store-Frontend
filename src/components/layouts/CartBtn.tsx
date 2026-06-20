@@ -14,11 +14,16 @@ const CartBtn = () => {
         0
     );
 
+    const handleClick = () => {
+        console.log("CartBtn clicked");
+        navigate("/cart");
+    };
+
     return (
         <div className="cart-btn">
             <button
                 className="cart-badge-trigger-btn"
-                onClick={() => navigate("/cart")}
+                onClick={handleClick}
             >
                 <i className="fa-solid fa-cart-shopping"></i>
 

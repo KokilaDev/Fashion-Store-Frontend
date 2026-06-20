@@ -20,13 +20,23 @@ const WishlistItem = ({
   console.log("PRODUCT:", product);
   console.log("IMAGE:", product.productId?.image);
 
+  const handleClick = () => {
+    console.log("AddToCartBtn clicked from WishlistItem");
+    onAddToCart();
+  };
+
+  const handleRemove = () => {
+    console.log("RemoveButton clicked from WishlistItem");
+    onRemove();
+  };
+
   return (
     <div className="wishlist-item">
 
       <div className="remove-btn-container">
         <button
           className="remove-btn"
-          onClick={onRemove}
+          onClick={handleRemove}
         >
           <i className="fa-solid fa-xmark"></i>
         </button>
@@ -49,7 +59,7 @@ const WishlistItem = ({
 
         <h4>Rs. {product.productId?.price}</h4>
 
-        <AddToCartBtn onClick={onAddToCart} />
+        <AddToCartBtn onClick={handleClick} />
       </div>
     </div>
   );

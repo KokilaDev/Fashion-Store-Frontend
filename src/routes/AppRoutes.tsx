@@ -10,6 +10,9 @@ const Products = lazy(() => import("../pages/Products"))
 const AddProduct = lazy(() => import("../pages/admin/AddProduct"))
 const WishList = lazy(() => import("../pages/WishList"))
 const Cart = lazy(() => import("../pages/CartPage"))
+const Profile = lazy(() => import("../pages/Profile"))
+const Checkout = lazy(() => import("../pages/Checkout"))
+const OrderSuccessPage = lazy(() => import("../pages/OrderSuccessPage"))
 
 type RequireAuthTypes = {
     children: ReactNode
@@ -54,14 +57,17 @@ const Router = () => {
         }
       >
         <Routes>
-          <Route path="/" element={ <RequireAuth><Home /> </RequireAuth> } />
-          <Route path="/login" element={ <Login /> } />
+          <Route path="/home" element={ <RequireAuth><Home /> </RequireAuth> } />
+          <Route path="/" element={ <Login /> } />
           <Route path="/register" element={ <Register /> } />
           <Route path="/dashboard" element={ <RequireAuth roles={["ADMIN"]}><Dashboard /> </RequireAuth> } />
           <Route path="/products" element={ <RequireAuth><Products /> </RequireAuth> } />
           <Route path="/wishlist" element={ <RequireAuth><WishList /> </RequireAuth> } />
           <Route path="/admin/addProduct" element={ <RequireAuth roles={["ADMIN"]}><AddProduct /> </RequireAuth> } />
           <Route path="/cart" element={ <RequireAuth><Cart /> </RequireAuth> } />
+          <Route path="/profile" element={ <RequireAuth><Profile /> </RequireAuth> } />
+          <Route path="/checkout" element={ <RequireAuth><Checkout /> </RequireAuth> } />
+          <Route path="/orderSuccess" element={ <RequireAuth><OrderSuccessPage /> </RequireAuth> } />
         </Routes>
       </Suspense>
     </BrowserRouter>

@@ -3,17 +3,21 @@ import { useWishlist } from "../../hooks/useWishlist";
 import AddToWishlistButton from "../wishlist/AddToWishlistButton";
 import AddToCartBtn from "../layouts/AddToCartBtn";
 import "../../styles/product.css";
-import { addToCart } from "../../api/cartApi";
-import { useCart } from "../../hooks/useCart";
+// import { addToCart } from "../../api/cartApi";
+// import { useCart } from "../../hooks/useCart";
+import { useAuth } from "../../hooks/useAuth";
 
 type Props = {
   product: Product;
+  onAddToCart: (product: Product) => void;
 };
 
-const ProductCard = ({ product }: Props) => {
+const ProductCard = ({ product, onAddToCart }: Props) => {
   const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
 
-  const { refreshCart } = useCart();
+  // const { refreshCart } = useCart();
+
+  const { user } = useAuth();
 
   const isFavorite = wishlist.some(
     (item: any) => item.productId?._id === product._id
@@ -27,25 +31,44 @@ const ProductCard = ({ product }: Props) => {
     }
   };
 
-  const userId = "USER_001";
+  const userId = user?._id || user?.id;
 
-  const handleAddToCart = async (product: any) => {
-    try {
-      await addToCart({
-        userId,
-        product: {
-          productId: product._id,
-          name: product.name,
-          price: product.price,
-          image: product.image,
-          qty: 1,
-        }
-      })
-      await refreshCart();
-    } catch (err) {
-      console.error("Failed to add to cart", err);
-    }
-  }
+  // console.log("USER", user);
+  // console.log("USERID", userId);
+
+  // const handleAddToCart = async (product: any) => {
+  //   if (!user?._id) {
+  //     console.log("User not logged in or still loading");
+  //     return;
+  //   }
+
+  //   console.log("USER", user);
+  //   console.log("USERID", userId);
+
+  //   try {
+  //     console.log("ADDING TO CART");
+
+  //     const response = await addToCart({
+  //       userId: user._id,
+  //       product: {
+  //         productId: product._id,
+  //         name: product.name,
+  //         price: product.price,
+  //         image: product.image,
+  //         qty: 1,
+  //       }
+  //     })
+
+  //     console.log("ADD RESPONSE", response.data);
+
+  //     await refreshCart();
+
+  //     console.log("REFRESH DONE");
+
+  //   } catch (err) {
+  //     console.error("ADD ERROR", err);
+  //   }
+  // }
 
   return (
     <div className="product-card">
@@ -77,7 +100,10 @@ const ProductCard = ({ product }: Props) => {
 
         <h4>Rs. {product.price}</h4>
 
-        <AddToCartBtn onClick={() => handleAddToCart(product)} />
+        <AddToCartBtn 
+          onClick={() => onAddToCart(product)}
+          disabled={!userId}
+        />
       </div>
     </div>
   );

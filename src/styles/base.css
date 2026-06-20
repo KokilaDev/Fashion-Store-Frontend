@@ -37,17 +37,16 @@ body {
     align-items: center;
 
     gap: 20px;
-    padding: 20px;
     text-align: center;
 }
 
 .back-btn {
   display: flex;
-  align-items: center;
+  align-items: left;
   gap: 8px;
 
-  background: var(--brown);
-  color: var(--white-smoke);
+  background: transparent;
+  color: var(--brown);
   opacity: 0.9;
 
   border: none;
@@ -65,7 +64,6 @@ body {
 .back-btn:hover {
   opacity: 1;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .back-btn:active {

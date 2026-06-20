@@ -1,5 +1,5 @@
 import BackButton from "../components/layouts/BackButton";
-import EmptyList from "../components/wishlist/EmptyList";
+import EmptyList from "../components/layouts/EmptyList";
 import WishlistCard from "../components/wishlist/WishlistCard";
 import { useWishlist } from "../hooks/useWishlist";
 import "../styles/wishlist.css"

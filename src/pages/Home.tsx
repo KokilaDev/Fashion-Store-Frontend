@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom"
+import Logout from "../components/auth/Logout"
 
 const Home = () => {
     const navigate = useNavigate()
@@ -20,6 +21,13 @@ const Home = () => {
             >
                 View Wishlist
             </button>
+            <button 
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                onClick={() => navigate("/profile")}
+            >
+                View Profile
+            </button>
+            <Logout />
         </div>
     )
 }

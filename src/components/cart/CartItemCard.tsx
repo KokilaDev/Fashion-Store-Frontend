@@ -17,6 +17,7 @@ const CartItemCard = ({ item, refresh, userId }: any) => {
     };
 
     const handleRemove = async () => {
+        console.log("RemoveButton clicked");
         await removeItem({
             userId,
             productId: item.productId,

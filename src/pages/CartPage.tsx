@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import BackButton from "../components/layouts/BackButton";
-import EmptyList from "../components/wishlist/EmptyList";
+import EmptyList from "../components/layouts/EmptyList";
 
 import CartItemCard from "../components/cart/CartItemCard";
 import CartSummary from "../components/cart/CartSummary";
 
 import { getCart } from "../api/cartApi";
 import "../styles/cart.css";
+import { useAuth } from "../hooks/useAuth";
 
 const Cart = () => {
 
-    const userId = "USER_001";
+    const { user } = useAuth();
+    const userId = user?._id;
+    
     const [cart, setCart] = useState<any>({ items: [] });
 
     const fetchCart = async () => {
@@ -19,6 +22,9 @@ const Cart = () => {
     };
 
     useEffect(() => {
+        if (!userId) {
+            return;
+        }
 
         const loadCart = async () => {
             const res = await getCart(userId);
@@ -27,7 +33,7 @@ const Cart = () => {
         
         loadCart();
 
-    }, []);
+    }, [userId]);
 
     const isEmpty = !cart.items || cart.items.length === 0;
 
