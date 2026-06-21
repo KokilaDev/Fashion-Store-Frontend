@@ -21,6 +21,9 @@ const Cart = () => {
         setCart(res.data);
     };
 
+    console.log("Cart User:", user);
+    console.log("Cart User ID:", user?._id);
+
     useEffect(() => {
         if (!userId) {
             return;
@@ -69,7 +72,10 @@ const Cart = () => {
 
                             <div className="cart-divider"></div>
 
-                            <CartSummary items={cart.items} />
+                            <CartSummary 
+                                items={cart.items} 
+                                userId={userId}
+                            />
 
                         </div>
                     )}

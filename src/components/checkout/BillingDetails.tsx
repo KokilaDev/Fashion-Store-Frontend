@@ -1,4 +1,7 @@
-const BillingDetails = () => {
+const BillingDetails = ({
+    checkoutData,
+    setCheckoutData,
+}: any) => {
     return (
         <div className="billing-details">
             <h3>Billing Details</h3>
@@ -9,6 +12,16 @@ const BillingDetails = () => {
                     type="text" 
                     placeholder="Full Name" 
                     className="billing-form-control" 
+                    value={checkoutData.billingDetails.fullName}
+                    onChange={(e) => 
+                        setCheckoutData({
+                            ...checkoutData,
+                            billingDetails: {
+                                ...checkoutData.billingDetails,
+                                fullName: e.target.value,
+                            },
+                        })
+                    }
                 />
             </div>
 
@@ -19,6 +32,16 @@ const BillingDetails = () => {
                         type="email" 
                         placeholder="Email Address" 
                         className="billing-form-control" 
+                        value={checkoutData.billingDetails.email}
+                        onChange={(e) => 
+                            setCheckoutData({
+                                ...checkoutData,
+                                billingDetails: {
+                                    ...checkoutData.billingDetails,
+                                    email: e.target.value,
+                                },
+                            })
+                        }
                     />
                 </div>
 
@@ -28,6 +51,16 @@ const BillingDetails = () => {
                         type="text" 
                         placeholder="Phone Number" 
                         className="billing-form-control" 
+                        value={checkoutData.billingDetails.phone}
+                        onChange={(e) => 
+                            setCheckoutData({
+                                ...checkoutData,
+                                billingDetails: {
+                                    ...checkoutData.billingDetails,
+                                    phone: e.target.value,
+                                },
+                            })
+                        }
                     />
                 </div>
             </div>

@@ -1,8 +1,9 @@
-import { useState } from "react";
 import PaymentForm from "./PaymentForm";
 
-const PaymentMethod = () => {
-    const [method, setMethod] = useState("COD");
+const PaymentMethod = ({
+    checkoutData,
+    setCheckoutData,
+}: any) => {
 
     return (
         <div className="payment-method">
@@ -12,8 +13,13 @@ const PaymentMethod = () => {
                 <label className="payment-option">
                     <input 
                         type="radio"
-                        checked={method === "COD"} 
-                        onChange={() => setMethod("COD")} 
+                        checked={checkoutData.paymentMethod === "COD"} 
+                        onChange={() => 
+                            setCheckoutData({
+                                ...checkoutData,
+                                paymentMethod: "COD",
+                            })
+                        } 
                     />
                     Cash on Delivery
                 </label>
@@ -21,15 +27,22 @@ const PaymentMethod = () => {
                 <label className="payment-option">
                     <input 
                         type="radio" 
-                        checked={method === "CARD"} 
-                        onChange={() => setMethod("CARD")} 
+                        checked={checkoutData.paymentMethod === "CARD"} 
+                        onChange={() => 
+                            setCheckoutData({
+                                ...checkoutData,
+                                paymentMethod: "CARD",
+                            })
+                        } 
                     />
                     Card Payment
                 </label>
             </div>
 
             <div className="payment-description">
-                {method === "CARD" && <PaymentForm />}
+                {checkoutData.paymentMethod === "CARD" && (
+                    <PaymentForm />
+                )}
             </div>
             
         </div>

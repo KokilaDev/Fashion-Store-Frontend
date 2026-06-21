@@ -1,4 +1,13 @@
-const ShippingDetails = () => {
+const ShippingDetails = ({
+    checkoutData,
+    setCheckoutData,
+}: any) => {
+    const districts = [
+        "Colombo", "Kalutara", "Gampaha", "Galle", "Matara", "Hambantota",
+        "Kandy", "Nuwara Eliya", "Badulla", "Monaragala", "Matale", "Trincomalee", "Batticaloa",
+        "Ampara", "Polonnaruwa", "Anuradhapura", "Puttalam", "Kurunegala", "Jaffna",
+        "Kilinochchi", "Mannar", "Mullaitivu", "Vavuniya", "Kegalle", "Ratnapura"
+    ];
     return (
         <div className="shipping-details">
             <h3>Shipping Details</h3>
@@ -8,6 +17,16 @@ const ShippingDetails = () => {
                 <input 
                     type="text" 
                     className="shipping-form-control" 
+                    value={checkoutData.shippingDetails.address}
+                    onChange={(e) => 
+                        setCheckoutData({
+                            ...checkoutData,
+                            shippingDetails: {
+                                ...checkoutData.shippingDetails,
+                                address: e.target.value,
+                            },
+                        })
+                    }
                 />
             </div>
 
@@ -16,32 +35,24 @@ const ShippingDetails = () => {
                     District
                     <select 
                         className="shipping-form-control"
+                        value={checkoutData.shippingDetails.district}
+                        onChange={(e) => 
+                            setCheckoutData({
+                                ...checkoutData,
+                                shippingDetails: {
+                                    ...checkoutData.shippingDetails,
+                                    district: e.target.value,
+                                },
+                            })
+                        }
                     >
-                        <option value="" disabled selected hidden>Select District</option>
-                        <option value="colombo">Colombo</option>
-                        <option value="kalutara">Kalutara</option>
-                        <option value="gampaha">Gampaha</option>
-                        <option value="galle">Galle</option>
-                        <option value="matara">Matara</option>
-                        <option value="hambantota">Hambantota</option>
-                        <option value="kandy">Kandy</option>
-                        <option value="nuwara-eliya">Nuwara Eliya</option>
-                        <option value="badulla">Badulla</option>
-                        <option value="matale">Matale</option>
-                        <option value="trincomalee">Trincomalee</option>
-                        <option value="batticaloa">Batticaloa</option>
-                        <option value="ampara">Ampara</option>
-                        <option value="polonnaruwa">Polonnaruwa</option>
-                        <option value="anuradhapura">Anuradhapura</option>
-                        <option value="puttalam">Puttalam</option>
-                        <option value="kurunegala">Kurunegala</option>
-                        <option value="jaffna">Jaffna</option>
-                        <option value="kilinochchi">Kilinochchi</option>
-                        <option value="mannar">Mannar</option>
-                        <option value="mullaitivu">Mullaitivu</option>
-                        <option value="vavuniya">Vavuniya</option>
-                        <option value="kegalle">Kegalle</option>
-                        <option value="ratnapura">Ratnapura</option>
+                        <option value="" disabled>Select District</option>
+
+                        {districts.map((district) => (
+                            <option key={district} value={district}>
+                                {district}
+                            </option>
+                        ))}
                     </select>
                 </div>
 
@@ -51,6 +62,16 @@ const ShippingDetails = () => {
                         type="text" 
                         placeholder="ex: 10100" 
                         className="shipping-form-control" 
+                        value={checkoutData.shippingDetails.postalCode}
+                        onChange={(e) => 
+                            setCheckoutData({
+                                ...checkoutData,
+                                shippingDetails: {
+                                    ...checkoutData.shippingDetails,
+                                    postalCode: e.target.value,
+                                },
+                            })
+                        }
                     />
                 </div>
             </div>

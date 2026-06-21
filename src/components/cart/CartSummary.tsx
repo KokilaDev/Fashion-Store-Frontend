@@ -9,6 +9,8 @@ const CartSummary = ({ items, userId }: any) => {
         0
     );
 
+    console.log("CartSummary userId:", userId);
+
     const handleCheckout = () => {
         navigate("/checkout", {
             state: {

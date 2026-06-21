@@ -286,7 +286,7 @@
 }
 
 .order-summary h2 {
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: var(--brown);
   margin-bottom: 10px;
   padding-bottom: 10px;
@@ -306,6 +306,7 @@
   font-size: 14px;
   font-weight: 600;
   color: var(--brown);
+  opacity: 0.9;
 }
 
 .item-qty {
@@ -320,6 +321,7 @@
   font-weight: 600;
   font-size: 15px;
   color: var(--brown);
+  opacity: 0.9;
 }
 
 .coupon-input {
@@ -377,7 +379,18 @@
 }
 
 .order-total {
-  margin-top: 25px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--brown);
+  opacity: 0.95;
+}
+
+.final {
+  margin-top: 30px;
   padding-top: 20px;
   border-top: 2px dashed #ddd;
   display: flex;
