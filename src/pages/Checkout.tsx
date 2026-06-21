@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CheckoutForm from "../components/checkout/CheckoutForm";
 import OrderSummary from "../components/checkout/OrderSummary";
 import BackButton from "../components/layouts/BackButton";
@@ -8,6 +8,7 @@ import { placeOrderApi } from "../api/orderApi";
 
 const Checkout = () => {
     const { state } = useLocation();
+    const navigate = useNavigate();
 
     const [checkoutData, setCheckoutData] = useState({
         billingDetails: {
@@ -80,6 +81,13 @@ const Checkout = () => {
 
             const response = await placeOrderApi(orderData);
             console.log("Order placed successfully:", response);
+
+            navigate("/orderSuccess", {
+                state: {
+                    orderId: response.order._id,
+                    total: response.order.total
+                }
+            })
 
         } catch (error) {
             console.error("Error placing order:", error);
