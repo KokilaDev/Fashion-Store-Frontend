@@ -28,7 +28,7 @@ const Login = () => {
         const role = res?.data?.roles;
 
         if (role?.includes("ADMIN")) navigate("/dashboard");
-        else navigate("/home");
+        else navigate("/");
       }
     } catch (err: any) {
       console.error("Login full error:", err);

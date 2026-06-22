@@ -32,7 +32,7 @@ const AddProduct = () => {
     const loadProducts = async () => {
         try {
             const res = await getAllProducts();
-            console.log("LOADED PRODUCTS:", res.data.products);
+            console.log("Loaded Products:", res.data.products);
             setProducts(res.data.products)
         } catch (err) {
             console.error("Failed to load products:", err);

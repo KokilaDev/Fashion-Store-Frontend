@@ -42,9 +42,11 @@ const ProductCard = ({ product, onAddToCart }: Props) => {
 
       <img
         src={
-          product.image
+          typeof product.image === "string" && product.image.startsWith("http")
+            ? product.image
+            : typeof product.image === "string"
             ? `http://localhost:5000/uploads/${product.image}`
-            : "/placeholder.png"
+            : product.image
         }
         alt={product.name}
       />
