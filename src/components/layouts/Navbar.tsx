@@ -44,7 +44,7 @@ const Navbar = () => {
             <FiShoppingBag />
           </Link>
 
-          <Link to="/login">
+          <Link to="/profile">
             <FiUser />
           </Link>
 

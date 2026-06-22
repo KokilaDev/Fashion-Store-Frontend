@@ -60,7 +60,7 @@ const Router = () => {
         }
       >
         <Routes>
-          <Route path="/" element={ <RequireAuth><Home /> </RequireAuth> } />
+          <Route path="/" element={ <Home /> } />
           <Route path="/login" element={ <Login /> } />
           <Route path="/register" element={ <Register /> } />
           <Route path="/dashboard" element={ <RequireAuth roles={["ADMIN"]}><Dashboard /> </RequireAuth> } />
