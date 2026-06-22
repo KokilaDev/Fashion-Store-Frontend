@@ -1,0 +1,84 @@
+@import "base.css";
+
+.orders-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px 40px 0 40px;
+}
+
+.orders-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.orders-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--brown);
+}
+
+.orders-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px 40px;
+  gap: 20px;
+}
+
+.table-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--brown);
+  text-align: left;
+}
+
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: var(--white-smoke);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.order-table thead {
+  background: var(--brown);
+  color: var(--white-smoke);
+}
+
+.order-table th {
+  padding: 14px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.order-table td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: var(--brown);
+  background: var(--white-smoke);
+}
+
+.action-btn {
+  background: var(--beige);
+  color: var(--brown);
+  border: 1px solid var(--brown);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+  background: var(--brown);
+  color: var(--white-smoke);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}

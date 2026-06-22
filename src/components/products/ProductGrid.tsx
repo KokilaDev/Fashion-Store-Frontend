@@ -4,7 +4,7 @@ import "../../styles/product.css"
 
 type Props = {
     products: Product[];
-    addToCart: (product: Product) => void;
+    addToCart: (product: Product, size: string) => void;
     gridView: number;
 };
 
@@ -25,8 +25,8 @@ const ProductGrid = ({
                 <ProductCard
                     key={product._id}
                     product={product}
-                    onAddToCart={() =>
-                        addToCart(product)
+                    onAddToCart={(product, size) => 
+                        addToCart(product, size)
                     }
                 />
             ))}

@@ -8,14 +8,28 @@ export interface Product {
   category?: string;
   stock?: number;
   qty?: number;
+  sizes?: {
+    XS: number;
+    S: number;
+    M: number;
+    L: number;
+    XL: number;
+  };
 }
 
 export interface AdminProduct {
   _id: string;
   name: string;
   category: string;
-  description: string;
   price: number;
-  stock: number;
-  image: string | File | null;
+  description: string;
+  image: File | string | null;
+
+  sizes: {
+    XS: number;
+    S: number;
+    M: number;
+    L: number;
+    XL: number;
+  };
 }

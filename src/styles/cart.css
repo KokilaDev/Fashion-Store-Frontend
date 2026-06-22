@@ -137,6 +137,24 @@
   /* margin-bottom: 15px; */
 }
 
+.size-box {
+  display: flex;
+  gap: 8px;
+  margin: 6px 0;
+}
+
+.size-btn {
+  padding: 4px 10px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+}
+
+.size-btn.active {
+  background: black;
+  color: white;
+}
+
 .qty-controls {
   display: flex;
   align-items: center;

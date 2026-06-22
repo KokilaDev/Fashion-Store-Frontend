@@ -23,7 +23,7 @@ const Products = () => {
     const { refreshCart } = useCart();
     const { user } = useAuth();
 
-    const handleAddToCart = async (product: Product) => {
+    const handleAddToCart = async (product: Product, size: string) => {
         try {
             if (!user?._id) return;
             
@@ -35,6 +35,8 @@ const Products = () => {
                     price: product.price,
                     image: product.image,
                     qty: 1,
+                    size: size, 
+                    availableSizes: product.sizes,
                 }
             });
             await refreshCart();

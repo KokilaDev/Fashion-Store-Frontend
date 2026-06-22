@@ -11,9 +11,16 @@ const AddProduct = () => {
     name: "",
     category: "",
     price: 0,
-    stock: 0,
     description: "",
     image: null,
+
+    sizes: {
+      XS: 0,
+      S: 0,
+      M: 0,
+      L: 0,
+      XL: 0,
+    }
   });
 
   const [products, setProducts] = useState<AdminProduct[]>([]);
@@ -25,6 +32,7 @@ const AddProduct = () => {
     const loadProducts = async () => {
         try {
             const res = await getAllProducts();
+            console.log("LOADED PRODUCTS:", res.data.products);
             setProducts(res.data.products)
         } catch (err) {
             console.error("Failed to load products:", err);
@@ -51,6 +59,16 @@ const AddProduct = () => {
     });
   };
 
+  const handleStockChange = (size: string, value: number) => {
+    setProduct((prev) => ({
+      ...prev,
+      sizes: {
+        ...prev.sizes,
+        [size]: value,
+      },
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -59,8 +77,8 @@ const AddProduct = () => {
     formData.append("name", product.name);
     formData.append("category", product.category);
     formData.append("price", product.price.toString());
-    formData.append("stock", product.stock.toString());
     formData.append("description", product.description);
+    formData.append("sizes", JSON.stringify(product.sizes));
 
     if (product.image) {
         formData.append("image", product.image);
@@ -82,9 +100,15 @@ const AddProduct = () => {
         name: "",
         category: "",
         price: 0,
-        stock: 0,
         description: "",
         image: null,
+        sizes: {
+          XS: 0,
+          S: 0,
+          M: 0,
+          L: 0,
+          XL: 0
+        }
     })
   };
 
@@ -95,6 +119,7 @@ const AddProduct = () => {
           product={product}
           handleChange={handleChange}
           handleImageChange={handleImageChange}
+          handleStockChange={handleStockChange}
           handleSubmit={handleSubmit}
           isEdit={isEdit}
         />

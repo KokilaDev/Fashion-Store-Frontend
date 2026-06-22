@@ -1,4 +1,5 @@
 import { updateQty, removeItem } from "../../api/cartApi";
+import "../../styles/cart.css";
 
 const CartItemCard = ({ item, refresh, userId }: any) => {
 
@@ -21,10 +22,22 @@ const CartItemCard = ({ item, refresh, userId }: any) => {
         await removeItem({
             userId,
             productId: item.productId,
+            size: item.size,
         });
 
         refresh();
     };
+
+    // const handleSizeChange = async (size: string) => {
+    //     await updateQty({
+    //         userId,
+    //         productId: item.productId,
+    //         qty: item.qty,
+    //         size: item.size,
+    //     });
+
+    //     refresh();
+    // };
 
     return (
         <div className="cart-item-card">
@@ -36,6 +49,20 @@ const CartItemCard = ({ item, refresh, userId }: any) => {
             <div className="cart-item-info">
                 <h3>{item.name}</h3>
                 <p>Rs. {item.price}</p>
+
+                <div className="size-box">
+                    {Object.entries(item.availableSizes || {})
+                        .filter(([, qty]) => Number(qty) > 0)
+                        .map(([size]) => (
+                        <button
+                            key={size}
+                            className={`size-btn ${item.size === size ? "active" : ""}`}
+                            // onClick={() => handleSizeChange(size)}
+                        >
+                            {size}
+                        </button>
+                    ))}
+                </div>
 
                 <div className="qty-controls">
                     <button onClick={() => handleQtyChange(item.qty - 1)}>-</button>

@@ -14,6 +14,8 @@ const Cart = lazy(() => import("../pages/CartPage"))
 const Profile = lazy(() => import("../pages/Profile"))
 const Checkout = lazy(() => import("../pages/Checkout"))
 const OrderSuccessPage = lazy(() => import("../pages/OrderSuccessPage"))
+const ManageOrders = lazy(() => import("../pages/admin/ManageOrders"))
+const ViewOrderDetails = lazy(() => import("../pages/admin/ViewOrderDetails"))
 
 type RequireAuthTypes = {
     children: ReactNode
@@ -70,6 +72,8 @@ const Router = () => {
           <Route path="/profile" element={ <RequireAuth><Profile /> </RequireAuth> } />
           <Route path="/checkout" element={ <RequireAuth><Checkout /> </RequireAuth> } />
           <Route path="/orderSuccess" element={ <RequireAuth><OrderSuccessPage /> </RequireAuth> } />
+          <Route path="/admin/manageOrders" element={ <RequireAuth roles={["ADMIN"]}><ManageOrders /> </RequireAuth> } />
+          <Route path="/orders/:id" element={<ViewOrderDetails />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

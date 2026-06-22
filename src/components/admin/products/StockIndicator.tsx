@@ -8,14 +8,14 @@ const StockIndicator = ({ stock }: Props) => {
   return (
     <span
       className={
-        stock <= 5
+        stock <= 20
           ? "low-stock"
-          : stock <= 20
+          : stock <= 50
           ? "medium-stock"
           : "high-stock"
       }
     >
-      {stock <= 5 ? "Low Stock" : stock <= 20 ? "Medium" : "In Stock"}
+      {stock <= 20 ? "Low Stock" : stock <= 50 ? "Medium" : "In Stock"}
     </span>
   );
 };

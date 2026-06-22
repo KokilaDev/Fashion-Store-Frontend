@@ -21,6 +21,12 @@ const Dashboard = () => {
             >
                 Add Coupons
             </button>
+            <button 
+                className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 ml-4"
+                onClick={() => navigate("/admin/manageOrders")}
+            >
+                Manage Orders
+            </button>
             <Logout />
         </div>
     )

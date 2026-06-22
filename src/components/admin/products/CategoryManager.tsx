@@ -13,7 +13,7 @@ const CategoryManager = ({ category, onChange }: Props) => {
       onChange={onChange}
       className="category-select"
     >
-      <option value="" selected disabled hidden>Select Category</option>
+      <option value="" disabled hidden>Select Category</option>
 
       <option value="Shirts">Shirts</option>
       <option value="T-Shirts">T-Shirts</option>

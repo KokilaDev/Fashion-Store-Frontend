@@ -7,9 +7,12 @@ const AddProductForm = ({
   product,
   handleChange,
   handleImageChange,
+  handleStockChange,
   handleSubmit,
   isEdit
 }: any) => {
+  console.log("FORM:", product);
+  
   return (
     <div className="add-product-container">
         <div className="add-product-header">
@@ -51,31 +54,49 @@ const AddProductForm = ({
                         placeholder="Price"
                         />
                     </div>
-
-                    <div className="form-group">
-                        Stock
-                        <input
-                        type="number"
-                        name="stock"
-                        value={product.stock}
-                        onChange={handleChange}
-                        placeholder="Stock"
-                        />
-                    </div>
                 </div>
 
-                <div className="form-group">
-                    Description
-                    <textarea
-                    name="description"
-                    value={product.description}
-                    onChange={handleChange}
-                    placeholder="Description"
-                    />
+                <div className="stock-sizes">
+                    Stock
+                    <table className="stock-table">
+                        <thead>
+                            <tr>
+                                <th>Size</th>
+                                <th>Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {["XS", "S", "M", "L", "XL"].map((size) => (
+                                <tr key={size}>
+                                    <td>{size}</td>
+                                    <td>
+                                        <input
+                                            type="number"
+                                            value={product.sizes?.[size] ?? 0}
+                                            onChange={(e) =>
+                                                handleStockChange(size, Number(e.target.value))
+                                            }
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
+
             </div>
 
             <div className="section-column">
+                <div className="form-group">
+                    Description
+                    <textarea
+                        name="description"
+                        value={product.description}
+                        onChange={handleChange}
+                        placeholder="Description"
+                    />
+                </div>
+
                 <ProductImageUploader
                     image={product.image}
                     onImageChange={handleImageChange}
