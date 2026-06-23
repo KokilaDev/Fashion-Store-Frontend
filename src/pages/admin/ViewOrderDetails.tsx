@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import BackButton from "../../components/layouts/BackButton";
-// import { getOrderByIdApi } from "../../api/orderApi";
+import { getOrderByIdApi } from "../../api/orderApi";
 
 const ViewOrderDetails = () => {
     const { id } = useParams();
@@ -11,27 +11,8 @@ const ViewOrderDetails = () => {
     useEffect(() => {
         const fetchOrder = async () => {
             try {
-                setOrder({
-                    _id: id,
-                    customerName: "Kokila Dewmini",
-                    createdAt: "2026-06-21",
-                    paymentMethod: "Credit Card",
-                    total: 2500,
-                    items: [
-                        {
-                            productName: "Product 1",
-                            size: "Medium",
-                            quantity: 2,
-                            price: 100,
-                        },
-                        {
-                            productName: "Product 2",
-                            size: "Large",
-                            quantity: 1,
-                            price: 200,
-                        },
-                    ],
-                });
+                const response = await getOrderByIdApi(id!);
+                setOrder(response);
             } catch (error) {
                 console.error("Error loading order:", error);
             }
@@ -44,61 +25,98 @@ const ViewOrderDetails = () => {
         return <h3>Loading...</h3>;
     }
 
+    console.log("Order Details:", order);
+
     return (
-        <div className="view-order-container">
-            <div className="view-order-header">
-                <BackButton />
-                <h2 className="view-order-title">Order Details</h2>
-            </div>
-
-            <div className="view-order-content">
-                <p>
-                    <strong>Order ID:</strong> {order._id}
-                </p>
-
-                <p>
-                    <strong>Customer:</strong> {order.customerName}
-                </p>
-
-                <p>
-                    <strong>Date:</strong>{" "}
-                    {new Date(order.createdAt).toLocaleDateString()}
-                </p>
-
-                <div>
-                    <strong>Item Details:</strong>
-
-                    <table className="item-table">
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>Size</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {order.items.map((item: any, index: number) => (
-                                <tr key={index}>
-                                    <td>{item.productName}</td>
-                                    <td>{item.size}</td>
-                                    <td>{item.quantity}</td>
-                                    <td>${item.price}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+        <div className="box-container">
+            <div className="view-order-container">
+                <div className="view-order-header">
+                    <BackButton />
+                    <h2 className="view-order-title">Order Details</h2>
                 </div>
 
-                <p>
-                    <strong>Payment Method:</strong>{" "}
-                    {order.paymentMethod}
-                </p>
+                <div className="view-order-content">
+                    <div className="order-content">
+                        <div className="order-information">
+                            <div className="order-info">
+                                <h6>Order ID: </h6>
+                                <p>{order.orderId}</p>
+                            </div>
+                            
+                            <div className="order-info">
+                                <h6>Order Date: </h6>
+                                <p>{new Date(order.createdAt).toLocaleDateString()}</p>
+                            </div>
+                        </div>
 
-                <p>
-                    <strong>Total:</strong> ${order.total}
-                </p>
+                        <div className="order-information">
+                            <div className="order-info">
+                                <h6>Customer Name: </h6>
+                                <p>{order.billingDetails.fullName}</p>
+                            </div>
+
+                            <div className="order-info">
+                                <h6>Contact Number: </h6>
+                                <p>{order.billingDetails.phone}</p>
+                            </div>
+                        </div>
+
+                        <div className="order-information">
+                            <div className="order-info">
+                                <h6>Total Amount: </h6>
+                                <p>Rs. {order.total}</p>
+                            </div>
+
+                            <div className="order-info">
+                                <h6>Payment Method: </h6>
+                                <p>{order.paymentMethod}</p>
+                            </div>
+                        </div>
+
+                        <div className="shipping-information">
+                            <div className="order-info">
+                                <h6>Shipping Address: </h6>
+                                <p>{order.shippingDetails.address}</p>
+                            </div>
+
+                            <div className="shipping-info">
+                                <div className="order-info">
+                                    <h6>District: </h6>
+                                    <p>{order.shippingDetails.district}</p>
+                                </div>
+
+                                <div className="order-info">
+                                    <h6>Postal Code: </h6>
+                                    <p>{order.shippingDetails.postalCode}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="order-content">
+                        <h4 className="order-detail-table">Item Details:</h4>
+                        <table className="item-table">
+                            <thead>
+                                <tr>
+                                    <th>Product ID</th>
+                                    <th>Size</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {order.items.map((item: any, index: number) => (
+                                    <tr key={index}>
+                                        <td>{item.productId}</td>
+                                        <td>{item.size}</td>
+                                        <td>{item.qty}</td>
+                                        <td>Rs. {item.price}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     );

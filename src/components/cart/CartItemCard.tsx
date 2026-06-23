@@ -18,14 +18,19 @@ const CartItemCard = ({ item, refresh, userId }: any) => {
     };
 
     const handleRemove = async () => {
-        console.log("RemoveButton clicked");
-        await removeItem({
-            userId,
-            productId: item.productId,
-            size: item.size,
-        });
+        try {
+            console.log("RemoveButton clicked");
+            
+            await removeItem({
+                userId,
+                productId: item.productId,
+                size: item.size,
+            });
 
-        refresh();
+            refresh();
+        } catch (error) {
+            console.error("Error removing item:", error);
+        }
     };
 
     // const handleSizeChange = async (size: string) => {
