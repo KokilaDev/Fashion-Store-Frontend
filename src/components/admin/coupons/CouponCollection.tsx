@@ -1,19 +1,10 @@
 import "../../../styles/coupon.css";
-
-type Coupon = {
-  _id: string;
-  code: string;
-  discount: number;
-  type: string;
-  expiryDate: string;
-  minOrderAmount: number;
-  isActive?: boolean;
-};
+import type { Coupon } from "../../../types/Coupon";
 
 type Props = {
   coupons: Coupon[];
   onEdit: (coupon: Coupon) => void;
-  onDelete: (id: string) => void;
+  onDelete: (_id: string) => void;
 };
 
 const CouponCollection = ({
@@ -28,11 +19,14 @@ const CouponCollection = ({
         <thead>
           <tr>
             <th>Code</th>
+            <th>Title</th>
             <th>Discount</th>
             <th>Type</th>
+            <th>Event</th>
             <th>Min Order</th>
             <th>Expiry Date</th>
             <th>Status</th>
+            <th>Birthday Month Offer</th>
             <th></th>
             <th></th>
           </tr>
@@ -41,7 +35,10 @@ const CouponCollection = ({
         <tbody>
           {coupons.map((coupon) => (
             <tr key={coupon._id}>
+
               <td>{coupon.code}</td>
+
+              <td>{coupon.title}</td>
 
               <td>
                 {coupon.type === "percentage"
@@ -50,6 +47,8 @@ const CouponCollection = ({
               </td>
 
               <td>{coupon.type}</td>
+
+              <td>{coupon.event || "-"}</td>
 
               <td>Rs. {coupon.minOrderAmount}</td>
 
@@ -61,6 +60,10 @@ const CouponCollection = ({
                 {new Date(coupon.expiryDate) > new Date()
                   ? "Active"
                   : "Expired"}
+              </td>
+
+              <td>
+                {coupon.isBirthdayMonthOffer ? "Yes" : "No"}
               </td>
 
               <td>

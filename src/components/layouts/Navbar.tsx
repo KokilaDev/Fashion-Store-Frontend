@@ -2,8 +2,9 @@ import { Link } from "react-router-dom";
 import {
   FiSearch,
   FiHeart,
-  FiShoppingBag,
+  FiShoppingCart,
   FiUser,
+  FiPhone,
 } from "react-icons/fi";
 import "../../styles/home.css";
 
@@ -26,26 +27,37 @@ const Navbar = () => {
           />
         </div>
 
-        <nav className="nav-links">
-          <Link to="/">Home</Link>
-          <Link to="/shop">Shop</Link>
-          <Link to="/categories">Categories</Link>
-          <Link to="/new-arrivals">New Arrivals</Link>
-          <Link to="/contact">Contact</Link>
-        </nav>
-
         <div className="nav-icons">
+
+          <div className="user-menu">
+            <Link to="/profile">
+              <FiUser />
+            </Link>
+
+            <div className="user-dropdown">
+              <div className="user-auth">
+                <Link to="/login">Login</Link>
+                <span className="auth-separator"> / </span>
+                <Link to="/register">Register</Link>
+              </div>
+              <Link to="/profile">My Profile</Link>
+              <Link to="/orders">My Orders</Link>
+              <Link to="/login">Logout</Link>
+            </div>
+          </div>
 
           <Link to="/wishlist">
             <FiHeart />
+            <span className="wishlist-count">0</span>
           </Link>
 
-          <Link to="/products">
-            <FiShoppingBag />
+          <Link to="/cart">
+            <FiShoppingCart />
+            <span className="cart-count">0</span>
           </Link>
 
-          <Link to="/profile">
-            <FiUser />
+          <Link to="">
+            <FiPhone />
           </Link>
 
         </div>

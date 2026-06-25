@@ -17,7 +17,12 @@ const AddCoupon = () => {
 
   const [form, setForm] = useState<CouponForm | Coupon>({
     code: "",
+    title: "",
+    description: "",
     discount: 0,
+    event: "",
+    isBirthdayMonthOffer: false,
+    isActive: true,
     type: "percentage",
     expiryDate: "",
     minOrderAmount: 0,
@@ -65,6 +70,8 @@ const AddCoupon = () => {
         minOrderAmount: Number(form.minOrderAmount),
       };
 
+      console.log("Sending:", couponData);
+
       if (editingId) {
         await updateCoupon(editingId, couponData);
       } else {
@@ -73,7 +80,12 @@ const AddCoupon = () => {
 
       setForm({
         code: "",
+        title: "",
+        description: "",
         discount: 0,
+        event: "",
+        isBirthdayMonthOffer: false,
+        isActive: true,
         type: "percentage",
         expiryDate: "",
         minOrderAmount: 0,
@@ -88,13 +100,22 @@ const AddCoupon = () => {
   };
 
   const handleEdit = (coupon: Coupon) => {
+    console.log("Editing coupon:", coupon);
+
     setForm({
       _id: coupon._id,
-      code: coupon.code,
-      discount: coupon.discount,
-      type: coupon.type,
-      expiryDate: coupon.expiryDate,
-      minOrderAmount: coupon.minOrderAmount,
+      code: coupon.code || "",
+      title: coupon.title || "",
+      description: coupon.description || "",
+      discount: coupon.discount || 0,
+      type: coupon.type || "percentage",
+      expiryDate: coupon.expiryDate
+        ? coupon.expiryDate.split("T")[0]
+        : "",
+      minOrderAmount: coupon.minOrderAmount || 0,
+      event: coupon.event || "",
+      isBirthdayMonthOffer: coupon.isBirthdayMonthOffer || false,
+      isActive: coupon.isActive ?? true,
     });
 
     setEditingId(coupon._id ?? null);

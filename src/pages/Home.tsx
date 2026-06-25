@@ -17,21 +17,18 @@ const HomePage = () => {
   return (
     <div className="home-page">
       <Navbar />
+      <CategorySection />
 
       <div id="home">
         <HeroSection />
       </div>
 
-      <div id="categories">
-        <CategorySection />
+      <div id="offers">
+        <OfferBanner />
       </div>
 
       <div id="trending">
         <TrendingProducts />
-      </div>
-
-      <div id="offers">
-        <OfferBanner />
       </div>
 
       <div id="new-arrivals">

@@ -9,15 +9,16 @@
   top: 0;
   z-index: 1000;
   width: 100%;
-  background: rgba(250, 246, 242, 0.95);
+  background: rgba(250, 246, 242, 1);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(104, 59, 43, 0.08);
+  /* border-bottom: 1px solid rgba(104, 59, 43, 0.08); */
+  height: 70px;
 }
 
 .navbar-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 18px 40px;
+  padding: 15px 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -38,7 +39,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  width: 300px;
+  width: 600px;
   padding: 10px 16px;
   background: white;
   border: 1px solid rgba(0,0,0,0.08);
@@ -62,44 +63,10 @@
   color: #888;
 }
 
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: var(--brown);
-  font-size: 0.75rem;
-  font-weight: 500;
-  position: relative;
-  transition: 0.3s;
-}
-
-.nav-links a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -6px;
-  width: 0;
-  height: 2px;
-  background: var(--gold);
-  transition: 0.3s;
-}
-
-.nav-links a:hover::after {
-  width: 100%;
-}
-
-.nav-links a:hover {
-  color: var(--gold);
-}
-
 .nav-icons {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
 }
 
 .nav-icons a {
@@ -111,6 +78,7 @@
   border-radius: 50%;
   color: var(--brown);
   transition: 0.3s;
+  text-decoration: none;
 }
 
 .nav-icons a svg {
@@ -119,7 +87,85 @@
 
 .nav-icons a:hover {
   color: var(--gold);
-  transform: translateY(-1px);
+}
+
+.nav-icons span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 35px;
+  left: 0;
+
+  width: 180px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.user-dropdown a {
+  display: block;
+  width: 100%;
+
+  padding: 12px 18px;
+  text-decoration: none;
+  color: var(--brown);
+  font-size: 12px;
+
+  box-sizing: border-box;
+}
+
+.user-dropdown a:hover {
+  box-shadow: none;
+}
+
+.user-auth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  margin: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.user-auth a {
+  text-decoration: none;
+  color: var(--brown);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.auth-separator {
+  font-size: 12px;
+  color: var(--brown);
+}
+
+.user-menu:hover .user-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 .hero {
@@ -137,6 +183,17 @@
   padding: 0 20px;
 }
 
+.hero::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
 .hero-title {
   font-size: 60px;
   font-weight: 700;
@@ -145,18 +202,22 @@
   margin-bottom: 20px;
   color: var(--white-smoke);
   text-shadow: 0 5px 20px rgba(0,0,0,0.4);
+  z-index: 2;
+  animation: fadeInUp 1s ease forwards;
 }
 
 .hero-subcontent p {
   font-size: 1.2rem;
-  color: var(--beige);
+  color: var(--white-smoke);
   margin-bottom: 30px;
   line-height: 1.6;
+  z-index: 2;
+  animation: fadeInUp 1.2s ease forwards;
 }
 
 .hero-subcontent button {
   background: var(--gold);
-  color: white;
+  color: var(--white-smoke);
   border: none;
   border-radius: 50px;
   padding: 14px 35px;
@@ -165,13 +226,12 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  animation: fadeInUp 1.4s ease forwards;
 }
 
 .hero-subcontent button:hover {
   transform: translateY(-4px);
-
-  background: var(--brown);
-
   color: white;
 }
 
@@ -188,39 +248,57 @@
 }
 
 .categories {
-  background: var(--white-smoke);
-  padding: 50px;
+  position: sticky;
+  top: 70px;
+  z-index: 999;
+  width: 100%;
+  background: rgba(250, 246, 242, 1);
+  border-bottom: 1px solid rgba(104, 59, 43, 0.08);
+  height: 40px;
 }
 
-.categories h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 40px;
-  color: var(--brown);
+.category-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 5px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.category-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+.category-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 10px;
 }
 
-.category-card {
-  width: 200px;
-  background: var(--beige);
-  padding: 20px 20px;
-  border-radius: 20px;
-  text-align: center;
-  font-weight: 600;
+.category-logo h2 {
   color: var(--brown);
-  cursor: pointer;
-  transition: 0.3s;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
-.category-card:hover {
-  color: var(--gold);
-  transform: translateY(-2px);
+.category-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(104, 59, 43, 0.2);
+}
+
+.category-grid {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.category-item {
+  margin: 0 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--brown);
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .trending-products {
@@ -242,23 +320,28 @@
   gap: 30px;
 }
 
+.offer-banner-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin: 20px 0;
+}
+
 .offer-banner {
   min-height: 300px;
   padding: 35px 20px;
-  background: linear-gradient(
-    135deg,
-    var(--brown),
-    var(--gold)
-  );
-  color: white;
+  background: var(--beige);
+  color: var(--brown);
+  border: 5px solid rgba(104, 59, 43, 0.08);
   text-align: center;
-  border-radius: 25px;
-  margin: 60px 8%;
+  border-radius: 35px;
+  margin: 50px 15% 30px;
 }
 
 .offer-banner h2 {
   font-size: 3rem;
   margin-bottom: 15px;
+  color: var(--brown);
 }
 
 .offer-banner p {
@@ -278,6 +361,38 @@
 .offer-banner button:hover {
   background: var(--beige);
   color: var(--brown);
+}
+
+.offer-banner {
+  position: relative;
+  transition: all 0.5s ease;
+}
+
+.offer-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(104, 59, 43, 0.6);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot.active {
+  width: 22px;
+  height: 8px;
+  border-radius: 20px;
+  background: rgba(104, 59, 43, 0.9);
 }
 
 .new-arrivals {

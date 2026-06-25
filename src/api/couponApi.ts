@@ -30,3 +30,9 @@ export const updateCoupon = async (id: string, data: any) => {
   const res = await axios.put(`${API}/update/${id}`, data);
   return res.data;
 };
+
+export const getActiveCouponsApi = async () => {
+  const res = await axios.get(`${API}/active`);
+  console.log("API Response:", res.data);
+  return res.data;
+}

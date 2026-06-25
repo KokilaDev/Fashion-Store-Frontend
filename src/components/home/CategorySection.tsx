@@ -1,26 +1,26 @@
 import "../../styles/home.css";
 
-const categories = [
-  "Men",
-  "Women",
-  "Kids",
-  "Shoes",
-  "Accessories",
-];
-
 const CategorySection = () => {
-  return (
-    <section className="categories">
-      <h2>Shop By Category</h2>
+  const categories = ["All", "Frocks", "Blouses", "Tops", "Skirts", "Party Wear", "Jeans", "Trousers", "Suits"];
 
-      <div className="category-grid">
-        {categories.map((category) => (
-          <div key={category} className="category-card">
-            {category}
-          </div>
-        ))}
+  return (
+    <header className="categories">
+      <div className="category-container">
+        <div className="category-logo">
+          <h2>Shop By Category</h2>
+        </div>
+
+        <div className="category-divider"></div>
+
+        <div className="category-grid">
+          {categories.map((category, index) => (
+            <div key={index} className="category-item">
+              {category}
+            </div>
+          ))}
+        </div>
       </div>
-    </section>
+    </header>
   );
 };
 
