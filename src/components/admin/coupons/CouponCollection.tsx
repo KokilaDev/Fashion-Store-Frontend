@@ -24,6 +24,7 @@ const CouponCollection = ({
             <th>Type</th>
             <th>Event</th>
             <th>Min Order</th>
+            <th>Start Date</th>
             <th>Expiry Date</th>
             <th>Status</th>
             <th>Birthday Month Offer</th>
@@ -51,6 +52,10 @@ const CouponCollection = ({
               <td>{coupon.event || "-"}</td>
 
               <td>Rs. {coupon.minOrderAmount}</td>
+
+              <td>
+                {new Date(coupon.startDate).toLocaleDateString()}
+              </td>
 
               <td>
                 {new Date(coupon.expiryDate).toLocaleDateString()}

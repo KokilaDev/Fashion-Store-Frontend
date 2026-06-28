@@ -27,7 +27,7 @@ const Login = () => {
 
         const role = res?.data?.roles;
 
-        if (role?.includes("ADMIN")) navigate("/dashboard");
+        if (role?.includes("ADMIN")) navigate("/admin");
         else navigate("/");
       }
     } catch (err: any) {

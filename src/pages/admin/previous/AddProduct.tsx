@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import AddProductForm from "../../components/admin/products/AddProductForm";
-import ProductInventory from "../../components/admin/products/ProductInventory";
-import type { AdminProduct } from "../../types/Product";
-import { addProduct, deleteProduct, getAllProducts, updateProduct } from "../../api/productApi";
-import DeleteProductModal from "../../components/admin/products/DeleteProductModal";
+import AddProductForm from "../../../components/admin/products/AddProductForm";
+import ProductInventory from "../../../components/admin/products/ProductInventory";
+import type { AdminProduct } from "../../../types/Product";
+import { addProduct, deleteProduct, getAllProducts, updateProduct } from "../../../api/productApi";
+import DeleteProductModal from "../../../components/admin/products/DeleteProductModal";
 
 const AddProduct = () => {
   const [product, setProduct] = useState<AdminProduct>({

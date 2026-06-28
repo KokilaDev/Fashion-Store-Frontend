@@ -5,6 +5,7 @@ export interface Coupon {
   description: string;
   discount: number;
   type: string;
+  startDate: string;
   expiryDate: string;
   minOrderAmount: number;
   event?: string;
@@ -18,6 +19,7 @@ export interface CouponForm {
   description: string;
   discount: number;
   type: string;
+  startDate: string;
   expiryDate: string;
   minOrderAmount: number;
   event?: string;

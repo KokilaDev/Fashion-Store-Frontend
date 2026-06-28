@@ -5,17 +5,22 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 const Home = lazy(() => import("../pages/Home"))
 const Login = lazy(() => import("../pages/auth/Login"))
 const Register = lazy(() => import("../pages/auth/Register"))
-const Dashboard = lazy(() => import("../pages/Dashboard"))
+const AppLayout = lazy(() => import("../pages/admin/AppLayout"))
+const Dashboard = lazy(() => import("../pages/admin/Dashboard"))
+const ProductPage = lazy(() => import("../pages/admin/ProductPage"))
+const CustomerPage = lazy(() => import("../pages/admin/CustomerPage"))
+const OrderPage = lazy(() => import("../pages/admin/OrderPage"))
+const SettingsPage = lazy(() => import("../pages/admin/SettingPage"))
 const Products = lazy(() => import("../pages/Products"))
-const AddProduct = lazy(() => import("../pages/admin/AddProduct"))
-const AddCoupon = lazy(() => import("../pages/admin/AddCoupon"))
+// const AddProduct = lazy(() => import("../pages/admin/previous/AddProduct"))
+// const AddCoupon = lazy(() => import("../pages/admin/previous/AddCoupon"))
 const WishList = lazy(() => import("../pages/WishList"))
 const Cart = lazy(() => import("../pages/CartPage"))
 const Profile = lazy(() => import("../pages/Profile"))
 const Checkout = lazy(() => import("../pages/Checkout"))
 const OrderSuccessPage = lazy(() => import("../pages/OrderSuccessPage"))
-const ManageOrders = lazy(() => import("../pages/admin/ManageOrders"))
-const ViewOrderDetails = lazy(() => import("../pages/admin/ViewOrderDetails"))
+// const ManageOrders = lazy(() => import("../pages/admin/previous/ManageOrders"))
+// const ViewOrderDetails = lazy(() => import("../pages/admin/previous/ViewOrderDetails"))
 
 type RequireAuthTypes = {
     children: ReactNode
@@ -63,17 +68,23 @@ const Router = () => {
           <Route path="/" element={ <Home /> } />
           <Route path="/login" element={ <Login /> } />
           <Route path="/register" element={ <Register /> } />
-          <Route path="/dashboard" element={ <RequireAuth roles={["ADMIN"]}><Dashboard /> </RequireAuth> } />
+          <Route path="/" element={ <AppLayout /> }>
+            <Route path="admin" element={ <RequireAuth roles={["ADMIN"]}><Dashboard /> </RequireAuth> } />
+            <Route path="admin/products" element={ <RequireAuth roles={["ADMIN"]}><ProductPage /> </RequireAuth> } />
+            <Route path="admin/customers" element={ <RequireAuth roles={["ADMIN"]}><CustomerPage /> </RequireAuth> } />
+            <Route path="admin/orders" element={ <RequireAuth roles={["ADMIN"]}><OrderPage /> </RequireAuth> } />
+            <Route path="admin/settings" element={ <RequireAuth roles={["ADMIN"]}><SettingsPage /> </RequireAuth> } />
+          </Route>
           <Route path="/products" element={ <RequireAuth><Products /> </RequireAuth> } />
           <Route path="/wishlist" element={ <RequireAuth><WishList /> </RequireAuth> } />
-          <Route path="/admin/addProduct" element={ <RequireAuth roles={["ADMIN"]}><AddProduct /> </RequireAuth> } />
-          <Route path="/admin/addCoupon" element={ <RequireAuth roles={["ADMIN"]}><AddCoupon /> </RequireAuth> } />
+          {/* <Route path="/admin/addProduct" element={ <RequireAuth roles={["ADMIN"]}><AddProduct /> </RequireAuth> } /> */}
+          {/* <Route path="/admin/addCoupon" element={ <RequireAuth roles={["ADMIN"]}><AddCoupon /> </RequireAuth> } /> */}
           <Route path="/cart" element={ <RequireAuth><Cart /> </RequireAuth> } />
           <Route path="/profile" element={ <RequireAuth><Profile /> </RequireAuth> } />
           <Route path="/checkout" element={ <RequireAuth><Checkout /> </RequireAuth> } />
           <Route path="/orderSuccess" element={ <RequireAuth><OrderSuccessPage /> </RequireAuth> } />
-          <Route path="/admin/manageOrders" element={ <RequireAuth roles={["ADMIN"]}><ManageOrders /> </RequireAuth> } />
-          <Route path="/orders/:id" element={<ViewOrderDetails />} />
+          {/* <Route path="/admin/manageOrders" element={ <RequireAuth roles={["ADMIN"]}><ManageOrders /> </RequireAuth> } /> */}
+          {/* <Route path="/admin/orders/:id" element={<ViewOrderDetails />} /> */}
         </Routes>
       </Suspense>
     </BrowserRouter>

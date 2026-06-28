@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import BackButton from "../../components/layouts/BackButton";
-import { getOrderByIdApi } from "../../api/orderApi";
+import BackButton from "../../../components/layouts/BackButton";
+import { getOrderByIdApi } from "../../../api/orderApi";
 
 const ViewOrderDetails = () => {
     const { id } = useParams();

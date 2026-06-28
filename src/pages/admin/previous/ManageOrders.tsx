@@ -1,6 +1,6 @@
-import DeliveredOrdersTable from "../../components/admin/orders/DeliveredOrdersTable";
-import OrdersHeader from "../../components/admin/orders/OrdersHeader";
-import PlacedOrdersTable from "../../components/admin/orders/PlacedOrdersTable";
+import DeliveredOrdersTable from "../../../components/admin/orders/DeliveredOrdersTable";
+import OrdersHeader from "../../../components/admin/orders/OrdersHeader";
+import PlacedOrdersTable from "../../../components/admin/orders/PlacedOrdersTable";
 import "../../styles/order.css";
 
 const ManageOrders = () => {

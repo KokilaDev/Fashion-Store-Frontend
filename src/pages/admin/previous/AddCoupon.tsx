@@ -4,12 +4,12 @@ import {
   createCoupon,
   updateCoupon,
   deleteCoupon,
-} from "../../api/couponApi";
-import AddCouponForm from "../../components/admin/coupons/AddCouponForm";
-import CouponCollection from "../../components/admin/coupons/CouponCollection";
-import type { Coupon, CouponForm } from "../../types/Coupon";
+} from "../../../api/couponApi";
+import AddCouponForm from "../../../components/admin/coupons/AddCouponForm";
+import CouponCollection from "../../../components/admin/coupons/CouponCollection";
+import type { Coupon, CouponForm } from "../../../types/Coupon";
 import "../../styles/coupon.css";
-import BackButton from "../../components/layouts/BackButton";
+import BackButton from "../../../components/layouts/BackButton";
 
 const AddCoupon = () => {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
@@ -24,6 +24,7 @@ const AddCoupon = () => {
     isBirthdayMonthOffer: false,
     isActive: true,
     type: "percentage",
+    startDate: "",
     expiryDate: "",
     minOrderAmount: 0,
   });
@@ -87,6 +88,7 @@ const AddCoupon = () => {
         isBirthdayMonthOffer: false,
         isActive: true,
         type: "percentage",
+        startDate: "",
         expiryDate: "",
         minOrderAmount: 0,
       });
@@ -109,6 +111,7 @@ const AddCoupon = () => {
       description: coupon.description || "",
       discount: coupon.discount || 0,
       type: coupon.type || "percentage",
+      startDate: coupon.startDate || "",
       expiryDate: coupon.expiryDate
         ? coupon.expiryDate.split("T")[0]
         : "",

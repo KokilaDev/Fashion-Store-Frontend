@@ -67,34 +67,7 @@ const AddCouponForm = ({
                             </select>
                         </div>
                     
-                        <div className="coupon-form-group">
-                            Expiry Date
-                            <div className="date-input-wrapper">
-                                <DatePicker
-                                    selected={
-                                        form.expiryDate
-                                        ? new Date(form.expiryDate)
-                                        : null
-                                    }
-                                    onChange={(date: Date | null) =>
-                                        handleChange({
-                                        target: {
-                                            name: "expiryDate",
-                                            value: date
-                                            ? date.toISOString().split("T")[0]
-                                            : "",
-                                        },
-                                        })
-                                    }
-                                    dateFormat="yyyy-MM-dd"
-                                    placeholderText="yyyy-mm-dd"
-                                    className="custom-datepicker"
-                                />
-
-                                <FiCalendar className="calendar-icon" />
-                            </div>
-                        </div>
-
+                        
                         <div className="coupon-form-group">
                             Min Order Amount
                             <input
@@ -108,6 +81,64 @@ const AddCouponForm = ({
                     </div>
 
                     <div className="section-column">
+                        <div className="coupon-form-date">
+                            <div className="coupon-form-group">
+                                Start Date
+                                <div className="date-input-wrapper">
+                                    <DatePicker
+                                        selected={
+                                            form.startDate
+                                            ? new Date(form.startDate)
+                                            : null
+                                        }
+                                        onChange={(date: Date | null) =>
+                                            handleChange({
+                                            target: {
+                                                name: "startDate",
+                                                value: date
+                                                ? date.toISOString().split("T")[0]
+                                                : "",
+                                            },
+                                            })
+                                        }
+                                        dateFormat="yyyy-MM-dd"
+                                        placeholderText="yyyy-mm-dd"
+                                        className="custom-datepicker"
+                                    />
+
+                                    <FiCalendar className="calendar-icon" />
+                                </div>
+                            </div>
+                            
+                            <div className="coupon-form-group">
+                                Expiry Date
+                                <div className="date-input-wrapper">
+                                    <DatePicker
+                                        selected={
+                                            form.expiryDate
+                                            ? new Date(form.expiryDate)
+                                            : null
+                                        }
+                                        onChange={(date: Date | null) =>
+                                            handleChange({
+                                            target: {
+                                                name: "expiryDate",
+                                                value: date
+                                                ? date.toISOString().split("T")[0]
+                                                : "",
+                                            },
+                                            })
+                                        }
+                                        dateFormat="yyyy-MM-dd"
+                                        placeholderText="yyyy-mm-dd"
+                                        className="custom-datepicker"
+                                    />
+
+                                    <FiCalendar className="calendar-icon" />
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="coupon-form-group">
                             Description
                             <textarea
