@@ -13,3 +13,7 @@ export const updateQty = (data: any) =>
 
 export const removeItem = (data: any) =>
     axios.delete(`${API}/remove`, { data });
+
+export const clearCart = (userId: string) => {
+    return axios.delete(`/api/cart/clear/${userId}`);
+};

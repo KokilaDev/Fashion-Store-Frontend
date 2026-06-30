@@ -8,6 +8,7 @@ const BackButton = () => {
   const handleClick = () => {
     console.log("BackButton clicked");
     navigate(-1);
+    window.location.reload();
   };
 
   return (

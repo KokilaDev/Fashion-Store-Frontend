@@ -1,7 +1,7 @@
 "use client"
 
-import { useMemo, useState } from "react"
-import { Pencil, Plus, Search, Trash2 } from "lucide-react"
+import { useEffect, useMemo, useState } from "react"
+import { Pencil, Plus, Search, Trash } from "lucide-react"
 import { toast } from "sonner"
 
 import { PageHeader } from "../dashboard/DashBoardShell"
@@ -36,6 +36,7 @@ import {
 import { Field, FieldGroup, FieldLabel } from "../ui/field"
 import { currency } from "../../../types/Order"
 import type { AdminProduct } from "../../../types/Product"
+import { addProduct, deleteProduct, getAllProducts, updateProduct } from "../../../api/productApi"
 
 const categories = ["Dresses", "Outerwear", "Accessories", "Footwear", "Knitwear"]
 
@@ -90,44 +91,65 @@ export function ProductsManager() {
     setDialogOpen(true)
   }
 
-  function handleSave() {
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const products = await getAllProducts();
+        setProducts(products);
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to load products");
+      }
+    }
+
+    fetchProducts();
+  }, []);
+
+  async function handleSave() {
     if (!form.name.trim()) {
-      toast.error("Please enter a product name.")
+      toast.error("Please enter a product name.");
       return
     }
-    const price = Number(form.price)
 
-    if (editing) {
-      setProducts((prev) =>
-        prev.map((p) =>
-          p._id === editing._id
-            ? {
-              ...p,
-              name: form.name,
-              category: form.category,
-              description: form.description,
-              price,
-              image: form.image,
-              sizes: form.sizes,
-            }
-            : p
-        )
-      )
-      toast.success(`${form.name} updated.`)
-    } else {
-      const newProduct = {
-        _id: crypto.randomUUID(),
-        name: form.name,
-        category: form.category,
-        description: form.description,
-        price,
-        image: form.image,
-        sizes: form.sizes,
+    try {  
+      const payload = new FormData();
+
+      payload.append("name", form.name);
+      payload.append("category", form.category);
+      payload.append("price", String(Number(form.price)));
+      payload.append("description", form.description);
+      payload.append("sizes", JSON.stringify(form.sizes));
+
+      const totalStock = Object.values(form.sizes).reduce((sum, qty) => sum + qty, 0);
+      
+      payload.append("stock", String(totalStock));
+
+      if (form.image instanceof File) {
+        payload.append("image", form.image);
       }
-      setProducts((prev) => [newProduct, ...prev])
-      toast.success("Product added.")
+
+      if (editing) {
+        const res = await updateProduct(editing._id, payload)
+        setProducts((prev) =>
+          prev.map((p) => (p._id === editing._id ? res.product : p))
+        )
+        toast.success("Product updated successfully.")
+      } else {
+        const res = await addProduct(payload);
+        setProducts((prev) => [...prev, res.product])
+        toast.success("Product added successfully.")
+      }
+
+      setDialogOpen(false);
+      setEditing(null);
+      setForm(emptyForm);
+
+    } catch (err: any) {
+      console.error("FULL ERROR:", err.response?.data);
+      console.error("STATUS:", err.response?.status);
+      console.error("AXIOS ERROR:", err);
+      toast.error(err?.response?.data?.message || "Failed to save product.")
     }
-    setDialogOpen(false)
   }
 
   function handleStockChange(size: string, value: number) {
@@ -140,12 +162,16 @@ export function ProductsManager() {
     }))
   }
 
-  function handleDelete(product: AdminProduct) {
-    setProducts((prev) => prev.filter((p) => p._id !== product._id))
-    toast.success(`${product.name} removed.`)
+  async function handleDelete(_id: string) {
+    try {
+      await deleteProduct(_id);
+      setProducts((prev) => prev.filter((p) => p._id !== _id));
+      toast.success("Product deleted successfully.");
+    } catch (err: any) {
+      console.error("Error deleting product:", err);
+      toast.error("Failed to delete product.");
+    }
   }
-
-  // const totalStock = products.reduce((sum, p) => sum + Object.values(p.sizes).reduce((a, b) => a + b, 0), 0)
 
   return (
     <>
@@ -217,7 +243,7 @@ export function ProductsManager() {
                                         <div className="flex flex-col">
                                             <span className="font-medium">{product.name}</span>
                                             <span className="text-xs text-muted-foreground">
-                                                {product._id}
+                                                {product.productId}
                                             </span>
                                         </div>
                                     </div>
@@ -248,17 +274,18 @@ export function ProductsManager() {
                                             size="icon-sm"
                                             aria-label="Edit"
                                             onClick={() => openEdit(product)}
+                                            className="text-muted-foreground hover:text-destructive"
                                         >
-                                            <Pencil />
+                                            <Pencil data-icon="inline-start" />
                                         </Button>
                                         <Button
                                             variant="ghost"
                                             size="icon-sm"
                                             aria-label="Delete"
                                             className="text-muted-foreground hover:text-destructive"
-                                            onClick={() => handleDelete(product)}
+                                            onClick={() => handleDelete(product._id)}
                                         >
-                                            <Trash2 />
+                                            <Trash data-icon="inline-start" />
                                         </Button>
                                     </div>
                                 </TableCell>
@@ -277,8 +304,8 @@ export function ProductsManager() {
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-md p-6">
-          <DialogHeader className="space-y-2">
+        <DialogContent className="sm:max-w-md p-4">
+          <DialogHeader>
             <DialogTitle>
               {editing ? "Edit Product" : "Add Product"}
             </DialogTitle>
@@ -289,26 +316,16 @@ export function ProductsManager() {
             </DialogDescription>
           </DialogHeader>
 
-          <FieldGroup className="mt-4">
-            <Field>
-              <FieldLabel htmlFor="name">Product name</FieldLabel>
-              <Input
-                id="name"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                placeholder="e.g. Noir Silk Evening Gown"
-              />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="description">Description</FieldLabel>
-              <Input
-                id="description"
-                value={form.description}
-                onChange={(e) => setForm({ ...form, description: e.target.value })}
-                placeholder="e.g. A stunning evening gown for special occasions"
-              />
-            </Field>
+          <FieldGroup className="mt-1.5">
             <div className="grid grid-cols-2 gap-4">
+              <Field>
+                <FieldLabel htmlFor="name">Product name</FieldLabel>
+                <Input
+                  id="name"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                />
+              </Field>
               <Field>
                 <FieldLabel htmlFor="category">Category</FieldLabel>
                 <Select
@@ -334,65 +351,74 @@ export function ProductsManager() {
                   </SelectContent>
                 </Select>
               </Field>
-              <Field>
-                <FieldLabel htmlFor="price">Price (LKR)</FieldLabel>
-                <Input
-                  id="price"
-                  type="number"
-                  value={form.price}
-                  onChange={(e) => setForm({ ...form, price: e.target.value })}
-                  placeholder="0"
-                />
-              </Field>
             </div>
+            <Field>
+              <FieldLabel htmlFor="description">Description</FieldLabel>
+              <Input
+                id="description"
+                value={form.description}
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
+              />
+            </Field>
             <div className="grid grid-cols-2 gap-4">
-              <Field>
-                <FieldLabel htmlFor="stock">Stock</FieldLabel>
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mt-2">
-                  {["XS", "S", "M", "L", "XL"].map((size) => (
-                    <div key={size} className="space-y-2">
-                      <label className="text-sm font-medium">{size}</label>
-                      <Input
-                        type="number"
-                        min={0}
-                        value={form.sizes[size as keyof typeof form.sizes]}
-                        onChange={(e) => 
-                          handleStockChange(size, Number(e.target.value))
-                        }
-                        placeholder="0"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="image">Image</FieldLabel>
-                <Input
-                  id="image"
-                  type="file"
-                  accept="image/*"
-                  value={typeof form.image === "string" ? form.image : ""}
-                  onChange={(e) => 
-                    setForm({ 
-                      ...form, 
-                      image: e.target.files?.[0] ?? null 
-                    })
-                  }
-                />
-                {form.image instanceof File ? (
-                  <img
-                    src={URL.createObjectURL(form.image)}
-                    alt="preview"
-                    className="w-[50px] h-[50px] object-cover rounded"
+              <div className="flex flex-col gap-4">
+                <Field>
+                  <FieldLabel htmlFor="price">Price (LKR)</FieldLabel>
+                  <Input
+                    id="price"
+                    type="number"
+                    value={form.price}
+                    onChange={(e) => setForm({ ...form, price: e.target.value })}
                   />
-                ) : typeof form.image === "string" ? (
-                  <img
-                    src={`http://localhost:5000/uploads/${form.image}`}
-                    alt="preview"
-                    className="w-[50px] h-[50px] object-cover rounded"
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="stock">Stock</FieldLabel>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
+                    {["XS", "S", "M", "L", "XL"].map((size) => (
+                      <div key={size} className="space-y-2">
+                        <label className="text-sm font-medium">{size}</label>
+                        <Input
+                          type="number"
+                          min={0}
+                          value={form.sizes[size as keyof typeof form.sizes]}
+                          onChange={(e) => 
+                            handleStockChange(size, Number(e.target.value))
+                          }
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </Field>
+              </div>
+              <div className="flex flex-col">
+                <Field>
+                  <FieldLabel htmlFor="image">Image</FieldLabel>
+                  <Input
+                    id="image"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => 
+                      setForm({ 
+                        ...form, 
+                        image: e.target.files?.[0] ?? null 
+                      })
+                    }
                   />
-                ) : null}
-              </Field>
+                  {form.image instanceof File ? (
+                    <img
+                      src={URL.createObjectURL(form.image)}
+                      alt="preview"
+                      className="w-[150px] h-[200px] object-cover rounded-md border mt-2"
+                    />
+                  ) : typeof form.image === "string" ? (
+                    <img
+                      src={`http://localhost:5000/uploads/${form.image}`}
+                      alt="preview"
+                      className="w-[150px] h-[200px] object-cover rounded-md border mt-2"
+                    />
+                  ) : null}
+                </Field>
+              </div>
             </div>
           </FieldGroup>
 

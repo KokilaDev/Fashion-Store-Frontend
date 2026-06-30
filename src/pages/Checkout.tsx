@@ -5,19 +5,21 @@ import BackButton from "../components/layouts/BackButton";
 import "../styles/checkout.css";    
 import { useState } from "react";
 import { placeOrderApi } from "../api/orderApi";
+import { useAuth } from "../hooks/useAuth";
 
 const Checkout = () => {
     const { state } = useLocation();
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     const [checkoutData, setCheckoutData] = useState({
         billingDetails: {
-            fullName: "",
-            email: "",
-            phone: "",
+            fullName: user?.name || "",
+            email: user?.email || "",
+            phone: user?.contact || "",
         },
         shippingDetails: {
-            address: "",
+            address: user?.address || "",
             district: "",
             postalCode: "",
         },
@@ -70,6 +72,7 @@ const Checkout = () => {
 
                 status: "Pending",
             };
+            console.log(state.items);
 
             if (!checkoutData.billingDetails.fullName) {
                 return alert("Full Name Required");
@@ -88,6 +91,7 @@ const Checkout = () => {
                     total: response.order.total
                 }
             })
+            window.location.reload();
 
         } catch (error) {
             console.error("Error placing order:", error);

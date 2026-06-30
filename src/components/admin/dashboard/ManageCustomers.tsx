@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Mail, Phone, Search, Users } from "lucide-react"
 
 import { PageHeader } from "../dashboard/DashBoardShell"
@@ -17,9 +17,10 @@ import {
   TableRow,
 } from "../ui/table"
 import { cn } from "../../../lib/utils"
-import { customers } from "../../../lib/data"
+// import { customers } from "../../../lib/data"
 import { currency } from "../../../types/Order"
 import type { Customer } from "../../../types/Customer"
+import { getAllCustomers } from "../../../api/customerApi"
 
 const tierStyles: Record<Customer["tier"], string> = {
   VIP: "bg-primary/15 text-primary ring-primary/25",
@@ -37,6 +38,7 @@ function initials(name: string) {
 
 export function CustomersManager() {
   const [query, setQuery] = useState("")
+  const [customers, setCustomers] = useState<Customer[]>([]);
 
   const filtered = useMemo(
     () =>
@@ -45,8 +47,18 @@ export function CustomersManager() {
           c.name.toLowerCase().includes(query.toLowerCase()) ||
           c.email.toLowerCase().includes(query.toLowerCase())
       ),
-    [query]
+    [customers, query]
   )
+
+  useEffect(() => {
+    const loadCustomers = async () => {
+        const data = await getAllCustomers();
+        console.log("Fetched customers:", data);
+        setCustomers(data);
+    };
+
+    loadCustomers();
+  }, [])
 
   const totalRevenue = customers.reduce((sum, c) => sum + c.totalPurchases, 0)
   const vipCount = customers.filter((c) => c.tier === "VIP").length
@@ -111,21 +123,21 @@ export function CustomersManager() {
                     </TableHeader>
                     <TableBody>
                         {filtered.map((customer) => (
-                        <TableRow key={customer.id} className="h-16">
+                        <TableRow key={customer._id} className="h-16">
                             <TableCell className="pl-6">
-                            <div className="flex items-center gap-3 py-2">
-                                <Avatar className="size-10">
-                                    <AvatarFallback className="bg-accent text-accent-foreground">
-                                        {initials(customer.name)}
-                                    </AvatarFallback>
-                                </Avatar>
-                                <div className="flex flex-col leading-tight">
-                                    <span className="font-medium">{customer.name}</span>
-                                    <span className="text-xs text-muted-foreground">
-                                        {customer.id}
-                                    </span>
+                                <div className="flex items-center gap-3 py-2">
+                                    <Avatar className="size-10">
+                                        <AvatarFallback className="bg-accent text-accent-foreground">
+                                            {initials(customer.name)}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <div className="flex flex-col leading-tight">
+                                        <span className="font-medium">{customer.name}</span>
+                                        <span className="text-xs text-muted-foreground">
+                                            {customer.customerId}
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
                             </TableCell>
                             <TableCell>
                             <div className="flex flex-col gap-1 text-sm text-muted-foreground">
@@ -135,7 +147,7 @@ export function CustomersManager() {
                                 </span>
                                 <span className="flex items-center gap-1.5">
                                     <Phone className="size-3.5" />
-                                    {customer.phone}
+                                    {customer.contact}
                                 </span>
                             </div>
                             </TableCell>

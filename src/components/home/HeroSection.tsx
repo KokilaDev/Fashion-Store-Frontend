@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import "../../styles/home.css";
+import { useAuth } from "../../hooks/useAuth";
 
 const HeroSection = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   
   return (
@@ -16,7 +18,14 @@ const HeroSection = () => {
                 Discover the latest trends and elevate your style.
             </p>
 
-            <button onClick={() => navigate("/products")}>Shop Now</button>
+            <button
+              onClick={() => {
+                navigate(user ? "/products" : "/login")
+                window.location.reload();
+              }}
+            >
+              Shop Now
+            </button>
         </div>
       </div>
     </section>

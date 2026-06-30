@@ -1,4 +1,5 @@
 export interface Coupon {
+  [x: string]: any;
   _id: string;
   code: string;
   title: string;
@@ -26,3 +27,15 @@ export interface CouponForm {
   isBirthdayMonthOffer?: boolean;
   isActive?: boolean;
 }
+
+export const events = [
+  "new-year",
+  "christmas",
+  "valentine",
+  "year-end",
+  "birthday",
+  "birth-month",
+  "order-value",
+] as const;
+
+export type CouponEvents = (typeof events)[number];

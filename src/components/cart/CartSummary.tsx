@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { clearCart } from "../../api/cartApi";
 
 const CartSummary = ({ items, userId }: any) => {
 
@@ -11,15 +12,20 @@ const CartSummary = ({ items, userId }: any) => {
 
     console.log("CartSummary userId:", userId);
 
-    const handleCheckout = () => {
-        navigate("/checkout", {
-            state: {
-                userId,
-                items,
-                total,
-                orderDate: new Date()
-            }
-        });
+    const handleCheckout = async () => {
+        try {    
+            navigate("/checkout", {
+                state: {
+                    userId,
+                    items,
+                    total,
+                    orderDate: new Date()
+                }
+            });
+            await clearCart(userId);
+        } catch (error) {
+            console.error("Error navigating to checkout:", error);
+        }
     }
 
     return (

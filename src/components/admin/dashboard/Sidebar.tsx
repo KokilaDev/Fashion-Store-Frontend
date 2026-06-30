@@ -1,6 +1,6 @@
 "use client"
 
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import {
   LayoutDashboard,
   ShirtIcon,
@@ -8,6 +8,7 @@ import {
   Users,
   Settings,
   LogOut,
+  TicketPercent,
 } from "lucide-react"
 
 import {
@@ -23,6 +24,7 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar"
 import { Avatar, AvatarFallback } from "../ui/avatar"
+import { logout } from "../../../api/authApi"
 
 const mainNav = [
   { title: "Dashboard", href: "/admin", icon: LayoutDashboard, isActive: true },
@@ -34,14 +36,30 @@ const mainNav = [
 ]
 
 const secondaryNav = [
+  { title: "Coupons", href: "/admin/coupons", icon: TicketPercent, isActive: false },
   { title: "Settings", href: "/admin/settings", icon: Settings, isActive: false }
 ]
 
 export function AppSidebar() {
   const location = useLocation()
+  const navigate = useNavigate()
 
   const isActive = (href: string) =>
     href === "/admin" ? location.pathname === "/admin" : location.pathname.startsWith(href)
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      localStorage.removeItem("token");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
+
+      navigate("/login", { replace: true });
+    }
+  }
 
   return (
     <Sidebar collapsible="icon">
@@ -119,6 +137,7 @@ export function AppSidebar() {
             </span>
           </div>
           <LogOut 
+            onClick={handleLogout}
             className="size-4 text-sidebar-primary-foreground/80 group-data-[collapsible=icon]:hidden"
           />
         </div>

@@ -84,28 +84,40 @@ const Profile = () => {
 
                         <button 
                             className="action-btn" 
-                            onClick={() => navigate("/orders")}
+                            onClick={() => {
+                                navigate("/orders")
+                                window.location.reload();
+                            }}
                         >
                             <i className="fa-solid fa-bag-shopping"></i>
                         </button>
 
                         <button 
                             className="action-btn" 
-                            onClick={() => navigate("/wishlist")}
+                            onClick={() => {
+                                navigate("/wishlist")
+                                window.location.reload();
+                            }}
                         >
                             <i className="fa-solid fa-heart"></i>
                         </button>
 
                         <button 
                             className="change-password-btn" 
-                            onClick={() => navigate("/change-password")}
+                            onClick={() => {
+                                navigate("/change-password")
+                                window.location.reload();
+                            }}
                         >
                             <i className="fa-solid fa-lock"></i>
                         </button>
 
                         <button 
                             className="logout-btn" 
-                            onClick={() => navigate("/logout")}
+                            onClick={() => {
+                                navigate("/logout")
+                                window.location.reload();
+                            }}
                         >
                             <i className="fa-solid fa-right-from-bracket"></i>
                         </button>
@@ -147,64 +159,64 @@ const Profile = () => {
 
                             {isEditing ? (
                                 <>
-                                <EditProfileForm
-                                    formData={formData}
-                                    handleInputChange={
-                                    handleInputChange
-                                    }
-                                />
+                                    <EditProfileForm
+                                        formData={formData}
+                                        handleInputChange={
+                                            handleInputChange
+                                        }
+                                    />
 
-                                <AddressForm
-                                    address={
-                                    formData.address
-                                    }
-                                    onChange={(value) =>
-                                    handleInputChange(
-                                        "address",
-                                        value
-                                    )
-                                    }
-                                />
+                                    <AddressForm
+                                        address={
+                                            formData.address
+                                        }
+                                        onChange={(value) =>
+                                            handleInputChange(
+                                                "address",
+                                                value
+                                            )
+                                        }
+                                    />
                                 </>
                             ) : (
                                 <>
-                                <ProfileCard
-                                    title="Full Name"
-                                    value={
-                                    formData.name ||
-                                    "No Name Found"
-                                    }
-                                />
+                                    <ProfileCard
+                                        title="Full Name"
+                                        value={
+                                            formData.name ||
+                                            "No Name Found"
+                                        }
+                                    />
 
-                                <ProfileCard
-                                    title="Email Address"
-                                    value={
-                                    formData.email ||
-                                    "No Email Found"
-                                    }
-                                />
+                                    <ProfileCard
+                                        title="Email Address"
+                                        value={
+                                            formData.email ||
+                                            "No Email Found"
+                                        }
+                                    />
 
-                                <ProfileCard
-                                    title="Contact Number"
-                                    value={
-                                    formData.contact ||
-                                    "No Contact Found"
-                                    }
-                                />
+                                    <ProfileCard
+                                        title="Contact Number"
+                                        value={
+                                            formData.contact ||
+                                            "No Contact Found"
+                                        }
+                                    />
 
-                                <ProfileCard
-                                    title="Date of Birth"
-                                    value={
-                                    formData.dob ||
-                                    "No Date Found"
-                                    }
-                                />
+                                    <ProfileCard
+                                        title="Date of Birth"
+                                        value={
+                                            formData.dob ||
+                                            "No Date Found"
+                                        }
+                                    />
 
-                                <AddressCard
-                                    address={
-                                    formData.address
-                                    }
-                                />
+                                    <AddressCard
+                                        address={
+                                            formData.address
+                                        }
+                                    />
                                 </>
                             )}
 
@@ -216,7 +228,7 @@ const Profile = () => {
                                 <button
                                     className="profile-btn-cancel"
                                     onClick={() =>
-                                    setIsEditing(false)
+                                        setIsEditing(false)
                                     }
                                 >
                                     Cancel

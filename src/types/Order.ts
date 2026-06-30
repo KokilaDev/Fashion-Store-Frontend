@@ -1,6 +1,8 @@
 export interface Order {
   _id: string;
 
+  orderId: string;
+
   billingDetails: {
     fullName: string;
     email: string;
@@ -33,6 +35,8 @@ export interface Order {
 export interface AdminOrder {
   _id: string;
 
+  orderId: string;
+
   billingDetails: {
     fullName: string;
     email: string;
@@ -45,13 +49,15 @@ export interface AdminOrder {
     postalCode: string;
   };
 
-  paymentMethod: string;
+  paymentMethod: "COD" | "Card";
+
+  subtotal: number;
 
   total: number;
 
-  paymentStatus: PaymentStatus;
+  paymentStatus: "Pending" | "Paid";
 
-  status: OrderStatus;
+  status: "Pending" | "Shipped" | "Delivered" | "Cancelled";
 
   items: {
     productId: string;

@@ -30,7 +30,7 @@ const Products = () => {
             await addToCartApi({
                 userId: user?._id,
                 product: {
-                    productId: product._id,
+                    productId: product.productId,
                     name: product.name,
                     price: product.price,
                     image: product.image,
@@ -48,9 +48,8 @@ const Products = () => {
     useEffect(() => {
         const loadProducts = async () => {
             try {
-                const res = await getAllProducts();
-
-                setProducts(res.data.products as Product[]);
+                const products = await getAllProducts();
+                setProducts(products as Product[]);
             } catch (err) {
                 console.error("Failed to load products", err);
             }

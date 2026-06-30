@@ -17,6 +17,7 @@ const CartBtn = () => {
     const handleClick = () => {
         console.log("CartBtn clicked");
         navigate("/cart");
+        window.location.reload();
     };
 
     return (

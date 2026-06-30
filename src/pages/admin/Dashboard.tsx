@@ -139,7 +139,12 @@ const Dashboard = () => {
                 <CardDescription>Latest activity from your store</CardDescription>
               </div>
 
-              <Button variant="ghost" size="sm" render={<Link to="/orders" />}>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                nativeButton={false}
+                render={<Link to="/orders" />}
+              >
                 View all
               </Button>
             </div>
