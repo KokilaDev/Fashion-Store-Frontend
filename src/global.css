@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-gold-50: #F5F2ED;
+  --color-gold-100: #E5E1D8;
+  --color-gold-200: #EBE7DF;
+  --color-gold-500: #F27D26;
+  --color-gold-600: #1A1A1A;
+  --color-gold-700: #111111;
+  --color-charcoal-900: #1A1A1A;
+  --color-charcoal-800: #1A1A1A;
+  --color-charcoal-700: #262626;
+
+  --color-bento-bg: #F5F2ED;
+  --color-bento-text: #1A1A1A;
+  --color-bento-border: #E5E1D8;
+  --color-bento-input: #EBE7DF;
+  --color-bento-orange: #F27D26;
+  --color-bento-dark: #1A1A1A;
+  --color-bento-secondary: #E5E1D8;
+}
+
+/* Custom fine-line scrollbar for minimal design */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+body {
+  background-color: #F5F2ED;
+  color: #1A1A1A;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Glassmorphism utility classes */
+.glass-nav {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}

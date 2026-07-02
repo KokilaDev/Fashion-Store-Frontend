@@ -48,3 +48,7 @@ export const updateProduct = async (
 export const deleteProduct = async (id: string) => {
   return await axios.delete(`${BASE_URL}/${id}`);
 };
+
+export const getLatestProducts = async () => {
+  return await axios.get(`${BASE_URL}/latest`);
+}

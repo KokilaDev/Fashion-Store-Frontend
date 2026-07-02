@@ -1,16 +1,16 @@
+import { HashRouter } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import { CartProvider } from "./context/CartContext";
-import { WishlistProvider } from "./context/WishlistContext";
+import { StoreProvider } from "./context/StoreContext";
 import Router from "./routes/AppRoutes";
 
 const App = () => {
   return (
     <AuthProvider>
-      <CartProvider>
-        <WishlistProvider>
+      <StoreProvider>
+        <HashRouter>
           <Router />
-        </WishlistProvider>
-      </CartProvider>
+        </HashRouter>
+      </StoreProvider>
     </AuthProvider>
   );
 };

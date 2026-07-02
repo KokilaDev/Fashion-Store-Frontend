@@ -1,10 +1,17 @@
 import { createContext, useEffect, useState } from "react";
 import { getMyDetails } from "../services/auth";
+import type { User } from "../types/types";
 
-const AuthContext = createContext<any>(null)
+export interface AuthContextType {
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  loading: boolean;
+}
+
+const AuthContext = createContext<AuthContextType | null>(null)
 
 export const AuthProvider = ({ children }: any) => {
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState<User | null>(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -12,6 +19,7 @@ export const AuthProvider = ({ children }: any) => {
             const token = localStorage.getItem("accessToken")
 
             if (!token) {
+                setUser(null)
                 setLoading(false)
                 return
             }
@@ -19,11 +27,8 @@ export const AuthProvider = ({ children }: any) => {
             try {
                 const res = await getMyDetails()
 
-                if (res.data) {
-                    setUser({
-                        _id: res.data.id,
-                        ...res.data
-                    })
+                if (res.data?.data) {
+                    setUser(res.data.data)
                 } else {
                     setUser(null)
                 }

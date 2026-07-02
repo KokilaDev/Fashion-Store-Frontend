@@ -1,65 +1,36 @@
-import ProductCard from "../products/ProductCard";
-import type { Product } from "../../types/Product";
-import "../../styles/home.css";
+import React from 'react';
+import { useStore } from '../../context/StoreContext';
+import { ProductCard } from '../products/ProductCard';
+import { Sparkles } from 'lucide-react';
 
-const TrendingProducts = () => {
-  const products: Product[] = [
-    {
-      productId: "1",
-      _id: "1",
-      name: "Oversized T-Shirt",
-      description: "Premium oversized cotton t-shirt",
-      price: 3500,
-      image: "/images/p1.jpg",
-      category: "Men",
-      sizes: {
-        XS: 20,
-        S: 10,
-        M: 15,
-        L: 8,
-        XL: 5,
-      },
-    },
-    {
-      productId: "2",
-      _id: "2",
-      name: "Cargo Pants",
-      description: "Comfortable cargo pants",
-      price: 5500,
-      image: "/images/p2.jpg",
-      category: "Men",
-      sizes: {
-        XS: 15,
-        S: 5,
-        M: 10,
-        L: 12,
-        XL: 7,
-      },
-    },
-  ];
-
-  const handleAddToCart = (
-    product: Product,
-    size: string
-  ) => {
-    console.log(product, size);
-  };
+export const TrendingProducts: React.FC = () => {
+  const { allProducts } = useStore();
+  const trendingProducts = allProducts.filter((product) => product.isTrending);
 
   return (
-    <section className="trending-products">
-      <h2>🔥 Trending Now</h2>
+    <section id="trending-section" className="py-4 bg-white w-full">
+      <div className="max-w-7xl mx-auto">
+        
+        {/* Title Header */}
+        <div className="flex items-center justify-between mb-6 border-b border-[#E5E1D8] pb-4">
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-widest text-black flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-[#F27D26]" />
+              <span>Trending Collection</span>
+            </h3>
+            <p className="text-[11px] text-neutral-400 mt-0.5">Highly coveted investment garments</p>
+          </div>
+          <span className="text-[10px] text-black/50 underline cursor-pointer hover:text-black transition-colors font-semibold uppercase">View All</span>
+        </div>
 
-      <div className="products-grid">
-        {products.map((product) => (
-          <ProductCard
-            key={product._id}
-            product={product}
-            onAddToCart={handleAddToCart}
-          />
-        ))}
+        {/* Product Card Grid (2-4 columns) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {trendingProducts.slice(0, 3).map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+
       </div>
     </section>
   );
 };
-
-export default TrendingProducts;

@@ -2,18 +2,12 @@ import api from "./api"
 
 export const register = async (
     name: string,
-    address: string,
-    dob: string,
-    contact: string,
     email: string,
     password: string
 ) => {
 
     const res = await api.post("/auth/register", {
         name,
-        address,
-        dob,
-        contact,
         email,
         password
     })
@@ -36,7 +30,7 @@ export const getMyDetails = async () => {
 }
 
 export const refreshTokenCall = async (refreshToken: string) => {
-    const res = await api.post("/auth/refresh", {
+    const res = await api.post("/auth/refresh-token", {
         refreshToken
     })
     return res.data

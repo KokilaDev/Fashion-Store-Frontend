@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom"
 import { DollarSign, ShoppingBag, TrendingUp, AlertTriangle } from "lucide-react"
 
-import { PageHeader } from "../../components/admin/dashboard/DashBoardShell"
-import { StatCard } from "../../components/admin/dashboard/StatCard"
-import { RevenueChart } from "../../components/admin/dashboard/RevenueChart"
-import { TopSellingList } from "../../components/admin/dashboard/TopSellingList"
-import { StatusBadge } from "../../components/admin/dashboard/StatusBadge"
+import { PageHeader } from "../../components/sample/dashboard/DashBoardShell"
+import { StatCard } from "../../components/sample/dashboard/StatCard"
+import { RevenueChart } from "../../components/sample/dashboard/RevenueChart"
+import { TopSellingList } from "../../components/sample/dashboard/TopSellingList"
+import { StatusBadge } from "../../components/sample/dashboard/StatusBadge"
 
 import {
   Card,
@@ -13,10 +13,10 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../../components/admin/ui/card"
+} from "../../components/sample/ui/card"
 
-import { Button } from "../../components/admin/ui/button"
-import { Badge } from "../../components/admin/ui/badge"
+import { Button } from "../../components/sample/ui/button"
+import { Badge } from "../../components/sample/ui/badge"
 
 import {
   Table,
@@ -25,7 +25,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../../components/admin/ui/table"
+} from "../../components/sample/ui/table"
 
 import { currency, orders, products } from "../../lib/data"
 

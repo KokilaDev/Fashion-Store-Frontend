@@ -1,4 +1,4 @@
-import { CustomersManager } from "../../components/admin/dashboard/ManageCustomers"
+import { CustomersManager } from "../../components/sample/dashboard/ManageCustomers"
 
 export default function CustomersPage() {
   return <CustomersManager />

@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom"
 import { Toaster } from "sonner"
-import { AppSidebar } from "../../components/admin/dashboard/Sidebar"
-import { SidebarProvider } from "../../components/admin/ui/sidebar"
+import { AppSidebar } from "../../components/sample/dashboard/Sidebar"
+import { SidebarProvider } from "../../components/sample/ui/sidebar"
 
 export default function AppLayout() {
   return (

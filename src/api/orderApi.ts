@@ -25,7 +25,7 @@ export const calculateCheckoutApi = async (items: any) => {
 
 export const getOrderByUserApi = async (userId: string) => {
     const response = await axios.get(`${API_URL}/user/${userId}`);
-    return response.data;
+    return response.data.orders;
 }
 
 export const getOrderByIdApi = async (orderId: string) => {

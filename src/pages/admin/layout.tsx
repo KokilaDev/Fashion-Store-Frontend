@@ -1,8 +1,8 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono, Playfair_Display } from 'next/font/google'
-import { Toaster } from '../../components/admin/ui/sonner'
-import { DashboardShell } from '../../components/admin/dashboard/DashBoardShell'
+import { Toaster } from '../../components/sample/ui/sonner'
+import { DashboardShell } from '../../components/sample/dashboard/DashBoardShell'
 import './globals.css'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
