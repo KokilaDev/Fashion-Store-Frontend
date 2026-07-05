@@ -1,17 +1,17 @@
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { StoreProvider } from "./context/StoreContext";
 import Router from "./routes/AppRoutes";
 
 const App = () => {
   return (
-    <AuthProvider>
-      <StoreProvider>
-        <HashRouter>
+    <BrowserRouter>
+      <AuthProvider>
+        <StoreProvider>
           <Router />
-        </HashRouter>
-      </StoreProvider>
-    </AuthProvider>
+        </StoreProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 };
 

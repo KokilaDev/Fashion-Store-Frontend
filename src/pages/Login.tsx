@@ -21,8 +21,10 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
 
     if (activeTab === 'register') {
+      console.log('Registering with:', { name, email });
       handleRegister();
     } else {
+      console.log('Logging in with:', { email });
       handleLogin();
     }
   };
@@ -39,9 +41,18 @@ export const LoginPage: React.FC = () => {
     }
 
     try {
+      console.log('Attempting registration with:', { name, email });
+
       await register(name, email, password);
+
       toast.success('Success..!');
+
+      console.log('Registration successful. Navigating to products page.');
+
       navigate('/products');
+
+      console.log('Navigation complete. Current path:', window.location.pathname);
+
     } catch (error: any) {
       console.error('Registration error:', error);
 
@@ -59,19 +70,28 @@ export const LoginPage: React.FC = () => {
     }
 
     try {
+      console.log('Attempting login with:', { email, password });
+
       const data = await login(email, password);
 
       localStorage.setItem('accessToken', data.data.accessToken);
       localStorage.setItem('refreshToken', data.data.refreshToken);
 
       const res = await getMyDetails();
-      const userData = res?.data?.data;
+
+      console.log("ME RESPONSE: ", res);
+      
+      const userData = res.data;
+
+      console.log("UserData: ", userData);
 
       setUser(userData);
 
       const role = userData?.roles || [];
 
       toast.success('Login successful!');
+
+      console.log('User roles:', role);
 
       if (role?.includes("ADMIN")) {
         navigate("/admin", { replace: true });
@@ -81,9 +101,13 @@ export const LoginPage: React.FC = () => {
         // window.location.reload();
       }
 
-    } catch (error) {
-      console.error('Login error:', error);
-      toast.error('Login failed. Please check your credentials and try again.');
+      console.log('Navigation complete. Current path:', window.location.pathname);
+
+    } catch (error: any) {
+      console.log(error.response?.status);
+      console.log(error.response?.data);
+
+      toast.error(error.response?.data?.message);
     }
   }
 

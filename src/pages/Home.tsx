@@ -13,6 +13,9 @@ import { motion } from 'motion/react';
 export const HomePage: React.FC = () => {
   // Scroll to top on mount
   useEffect(() => {
+    
+    console.log('HomePage mounted. Scrolling to top.');
+
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
 

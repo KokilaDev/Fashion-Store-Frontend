@@ -1,29 +1,29 @@
-import React from 'react';
-import { X } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { X, UploadCloud, Trash2, Link as LinkIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import type { Product } from '../../types/types';
+import type { Product, ProductForm } from '../../types/types';
 
-interface ProductFormState {
-  id: string;
-  name: string;
-  price: number;
-  originalPrice: number;
-  image: string;
-  category: string;
-  sizes: string[];
-  isTrending: boolean;
-  isNew: boolean;
-  rating: number;
-  description: string;
-  stock: number;
-}
+// interface ProductFormState {
+//   id: string;
+//   name: string;
+//   price: number;
+//   originalPrice: number;
+//   image: string;
+//   category: string;
+//   sizes: string[];
+//   isTrending: boolean;
+//   isNew: boolean;
+//   rating: number;
+//   description: string;
+//   stock: number;
+// }
 
 interface ProductModalProps {
   isOpen: boolean;
   onClose: () => void;
   editingProduct: Product | null;
-  productForm: ProductFormState;
-  setProductForm: (form: ProductFormState) => void;
+  productForm: ProductForm;
+  setProductForm: (form: ProductForm) => void;
   handleSubmit: (e: React.FormEvent) => void;
 }
 
@@ -35,6 +35,65 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   setProductForm,
   handleSubmit
 }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [showUrlInput, setShowUrlInput] = useState(false);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      processFile(file);
+    }
+  };
+
+  const processFile = (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      alert('Please select a valid image file (PNG, JPG, WebP).');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const result = event.target?.result;
+      if (typeof result === 'string') {
+        setProductForm({ ...productForm, image: result });
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      processFile(file);
+    }
+  };
+
+  const triggerFileSelect = () => {
+    fileInputRef.current?.click();
+  };
+
+  const removeImage = () => {
+    setProductForm({ 
+      ...productForm, 
+      imageUrl: '',
+      imageFile: null 
+    });
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -139,16 +198,114 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                 </div>
               </div>
 
-              <div>
-                <label className="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1">Image URL (Unsplash portrait recommended)</label>
+              {/* IMAGE UPLOAD SECTION */}
+              <div className="space-y-2">
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-neutral-500">
+                  Garment Portrait Image
+                </label>
+
                 <input
-                  type="url"
-                  required
-                  placeholder="https://images.unsplash.com/..."
-                  value={productForm.image}
-                  onChange={(e) => setProductForm({ ...productForm, image: e.target.value })}
-                  className="w-full px-3.5 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl bg-[#F5F2ED] text-neutral-800 text-[11px]"
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  className="hidden"
                 />
+
+                {productForm.imageFile ? (
+                  // Image Preview Card
+                  <div className="relative border border-[#E5E1D8] bg-[#F5F2ED] rounded-xl p-3 flex items-center gap-4">
+                    <img
+                      src={
+                        typeof productForm.imageFile === "string"
+                          ? productForm.imageFile
+                          : undefined
+                      }
+                      alt="Garment preview"
+                      referrerPolicy="no-referrer"
+                      className="w-16 h-20 object-cover rounded-lg border border-neutral-200 shadow-sm"
+                    />
+                    <div className="flex-grow min-w-0">
+                      <p className="font-bold text-neutral-800 text-xs truncate">Image Loaded Successfully</p>
+                      <p className="text-[10px] text-neutral-400 mt-0.5">
+                        {productForm.imageUrl.startsWith('data:image') 
+                          ? 'Local uploaded file (Base64)' 
+                          : 'External web image link'}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={removeImage}
+                        className="mt-2 text-red-500 hover:text-red-700 font-bold uppercase tracking-wider text-[9px] flex items-center gap-1 cursor-pointer"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        <span>Delete Image</span>
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  // Elegant Upload Drag and Drop zone
+                  <div
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    onClick={triggerFileSelect}
+                    className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all duration-300 flex flex-col items-center justify-center gap-2 ${
+                      isDragging
+                        ? 'border-[#F27D26] bg-[#F27D26]/5'
+                        : 'border-[#E5E1D8] hover:border-[#F27D26] hover:bg-[#F5F2ED]/50'
+                    }`}
+                  >
+                    <UploadCloud className="w-8 h-8 text-[#8C857B]" />
+                    <div>
+                      <p className="font-bold text-[#1A1A1A]">Click to choose file or drag & drop</p>
+                      <p className="text-[10px] text-[#8C857B] mt-1">Supports PNG, JPEG, WEBP portrait photos</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Optional URL Toggle / Form Field */}
+                <div className="pt-1">
+                  {!showUrlInput && !productForm.imageFile && (
+                    <button
+                      type="button"
+                      onClick={() => setShowUrlInput(true)}
+                      className="text-neutral-500 hover:text-black font-bold uppercase tracking-widest text-[9px] flex items-center gap-1"
+                    >
+                      <LinkIcon className="w-3 h-3" />
+                      <span>Or paste an image web URL instead</span>
+                    </button>
+                  )}
+
+                  {(showUrlInput || productForm.imageFile && !productForm.imageUrl.startsWith('data:image')) && (
+                    <div className="mt-2 space-y-1.5">
+                      <div className="flex justify-between items-center">
+                        <label className="text-[9px] font-bold uppercase tracking-wider text-neutral-400">
+                          Or Paste Web Image Link directly
+                        </label>
+                        {showUrlInput && (
+                          <button
+                            type="button"
+                            onClick={() => setShowUrlInput(false)}
+                            className="text-neutral-400 hover:text-black text-[9px] font-bold"
+                          >
+                            Hide URL Input
+                          </button>
+                        )}
+                      </div>
+                      <input
+                        type="url"
+                        placeholder="https://images.unsplash.com/photo-..."
+                        value={productForm.imageUrl.startsWith('data:image') ? '' : productForm.image}
+                        onChange={(e) => setProductForm({ 
+                          ...productForm, 
+                          imageUrl: result,
+                          imageFile: file
+                        })}
+                        className="w-full px-3.5 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl bg-[#F5F2ED] text-neutral-800 text-[11px]"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div>

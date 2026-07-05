@@ -110,10 +110,13 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                   return (
                     <tr key={p.id} className="hover:bg-neutral-50/50 transition-colors">
                       <td className="p-4 flex items-center gap-3">
-                        <img 
-                          src={p.image} 
-                          alt={p.name} 
-                          referrerPolicy="no-referrer"
+                        <img
+                          src={
+                            typeof p.image === "string"
+                              ? p.image
+                              : undefined
+                          }
+                          alt={p.name}
                           className="w-10 h-12 object-cover rounded-lg bg-neutral-100 shrink-0 border border-neutral-200"
                         />
                         <div>
@@ -122,7 +125,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                         </div>
                       </td>
                       <td className="p-4">
-                        <p className="font-mono text-[10px] font-bold text-neutral-400">{p.id.toUpperCase()}</p>
+                        <p className="font-mono text-[10px] font-bold text-neutral-400">{p.id ? p.id.toUpperCase() : 'N/A'}</p>
                         <span className="text-[9px] bg-neutral-100 text-neutral-600 px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
                           {p.category}
                         </span>

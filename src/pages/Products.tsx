@@ -12,6 +12,7 @@ export const ProductsPage: React.FC = () => {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
+    console.log("Products Page mounted.");
   }, []);
 
   const filteredProducts = useMemo(() => {

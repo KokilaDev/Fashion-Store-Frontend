@@ -1,5 +1,5 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import { X, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import type { Order } from '../../types/types';
 
@@ -81,9 +81,20 @@ export const OrderModal: React.FC<OrderModalProps> = ({
               ))}
             </div>
 
-            <div className="flex justify-between items-center py-3 border-t border-neutral-100 font-bold text-[#1A1A1A] text-sm mb-5">
+            <div className="flex justify-between items-center py-3 border-t border-neutral-100 font-bold text-[#1A1A1A] text-sm mb-4">
               <span>Grand Total:</span>
               <span>${selectedOrder.total.toFixed(2)}</span>
+            </div>
+
+            {/* Shipping Address */}
+            <div className="bg-[#F5F2ED] border border-[#E5E1D8] p-3 rounded-xl mb-5 space-y-1">
+              <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-neutral-500">
+                <MapPin className="w-3.5 h-3.5 text-[#F27D26]" />
+                <span>Shipping Address</span>
+              </div>
+              <p className="text-[11px] text-neutral-800 leading-relaxed font-medium pl-5">
+                {selectedOrder.shippingAddress || `${selectedOrder.id} - Premium Courier Delivery`}
+              </p>
             </div>
 
             {/* Status Actions */}

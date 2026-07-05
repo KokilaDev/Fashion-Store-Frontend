@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { FileText, ChevronRight, Package, Calendar } from 'lucide-react';
+import { FileText, ChevronRight, Package, Calendar, MapPin } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { getOrderByUserApi } from '../api/orderApi';
 import type { Order } from '../types/types';
@@ -40,7 +40,6 @@ export const OrdersPage: React.FC = () => {
 
   if (!user) return null;
 
-  // ✅ LOADING UI FIX
   if (loading) {
     return (
       <div className="text-center py-20 text-neutral-500">
@@ -126,43 +125,70 @@ export const OrdersPage: React.FC = () => {
 
                 </div>
 
-                <span className="text-[10px] px-3 py-1 rounded-full font-bold uppercase bg-neutral-100">
-                  {order.status}
-                </span>
+                {/* Status Badge */}
+                <div className="flex items-center gap-2">
+                  <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                    order.status === 'Processing'
+                      ? 'bg-amber-50 text-amber-800 border border-amber-150 animate-pulse'
+                      : order.status === 'Delivered'
+                      ? 'bg-emerald-50 text-emerald-800 border border-emerald-150'
+                      : 'bg-neutral-100 text-neutral-700 border border-neutral-200'
+                  }`}>
+                    {order.status}
+                  </span>
+                </div>
               </div>
 
-              {/* Items */}
-              <div className="p-4 sm:p-6 divide-y divide-neutral-100">
-
+              {/* Order Items list */}
+              <div className="divide-y divide-neutral-100 p-4 sm:p-6">
                 {order.items.map((item) => (
-                  <div
-                    key={item.productId}
-                    className="flex gap-4 py-4 items-center"
-                  >
+                  <div key={item.productId} className="flex gap-4 py-4 first:pt-0 last:pb-0 items-center">
+                    {/* Item Image */}
+                    <div className="w-16 aspect-[3/4] rounded bg-neutral-50 overflow-hidden flex-shrink-0">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-cover object-top"
+                      />
+                    </div>
 
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-16 h-20 object-cover rounded"
-                    />
-
+                    {/* Description Details */}
                     <div className="flex-grow">
-                      <h4 className="font-semibold text-sm">
-                        {item.name}
-                      </h4>
-
-                      <div className="text-[10px] text-neutral-400 mt-1">
-                        SIZE: {item.size} | QTY: {item.quantity}
+                      <h4 className="text-xs sm:text-sm font-semibold text-charcoal-900 line-clamp-1">{item.name}</h4>
+                      <div className="flex items-center gap-3 text-[10px] text-neutral-400 font-bold tracking-wider mt-1.5">
+                        <span className="bg-neutral-100 px-1.5 py-0.5 rounded uppercase">SIZE: {item.size}</span>
+                        <span>QUANTITY: {item.quantity}</span>
                       </div>
                     </div>
 
-                    <div className="font-bold font-mono">
-                      ${(item.price * item.quantity).toFixed(2)}
+                    {/* Price */}
+                    <div className="text-right">
+                      <p className="text-xs sm:text-sm font-bold text-charcoal-900 font-mono">${(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="text-[9px] text-neutral-400 italic">Atelier tailored</p>
                     </div>
-
                   </div>
                 ))}
+              </div>
 
+              {/* Shipping Address Row */}
+              {order.shippingAddress && (
+                <div className="px-4 sm:px-6 py-3 bg-neutral-50/30 border-t border-neutral-100 flex items-start gap-2 text-[11px] text-neutral-600">
+                  <MapPin className="w-3.5 h-3.5 text-[#F27D26] shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-bold text-neutral-500 mr-1.5 uppercase text-[9px] tracking-wider">Shipping to:</span>
+                    <span className="font-medium text-neutral-700">{order.shippingAddress}</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Order Footer Progress bar description */}
+              <div className="bg-neutral-50/20 border-t border-neutral-100 p-4 text-[10px] text-neutral-500 font-medium flex justify-between items-center">
+                <span className="flex items-center gap-1.5 uppercase font-bold tracking-wider text-neutral-400">
+                  <Package className="w-4 h-4 text-neutral-400" />
+                  <span>Tracking: IN TRANSIT via DHL EXPRESS</span>
+                </span>
+                <span className="text-neutral-400 font-mono font-bold">Standard Courier Deliv.</span>
               </div>
 
             </div>

@@ -3,9 +3,9 @@ import {
   type Product,
   type CartItem,
   type Order,
-  MOCK_PRODUCTS,
   type Coupon
 } from '../types/types';
+import { getAllProducts } from '../api/productApi';
 
 interface StoreContextType {
   cart: CartItem[];
@@ -26,9 +26,8 @@ interface StoreContextType {
 
   coupons: Coupon[];
 
-  addProduct: (product: Product) => void;
-  editProduct: (product: Product) => void;
-  deleteProduct: (productId: string) => void;
+  loadProducts: () => Promise<void>;
+  setAllProducts: React.Dispatch<React.SetStateAction<Product[]>>;
 
   updateOrderStatus: (orderId: string, status: Order['status']) => void;
 
@@ -68,21 +67,12 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     safeParse('aura_wishlist', [])
   );
 
-  const [allProducts, setAllProducts] = useState<Product[]>(() =>
-    safeParse('aura_products', MOCK_PRODUCTS)
-  );
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const [coupons, setCoupons] = useState<Coupon[]>(() =>
-    safeParse('aura_coupons', [
-      { code: "AURA15", discountPercent: 15, description: "15% OFF on Summer Collection" },
-      { code: "ELEGANCE20", discountPercent: 20, description: "20% OFF on Party Wear and Frocks" },
-      { code: "FIRSTBUY10", discountPercent: 10, description: "10% OFF on your very first order" },
-      { code: "AURACLUB25", discountPercent: 25, description: "Exclusive 25% VIP Lounge Voucher" }
-    ])
-  );
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
 
   const [adminOrders, setAdminOrders] = useState<Order[]>(() =>
     safeParse('aura_admin_orders', [])
@@ -97,6 +87,16 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     orderCount: number;
   }[]>(() => safeParse('aura_customers', []));
 
+  const loadProducts = async () => {
+    try {
+      const data = await getAllProducts();
+      console.log('Products loaded successfully:', data);
+      setAllProducts(data);
+    } catch (error) {
+      console.error('Failed to load products:', error);
+    }
+  }
+
   // ================= LOCAL STORAGE SYNC =================
 
   useEffect(() => {
@@ -108,8 +108,8 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [wishlist]);
 
   useEffect(() => {
-    localStorage.setItem('aura_products', JSON.stringify(allProducts));
-  }, [allProducts]);
+    loadProducts();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('aura_coupons', JSON.stringify(coupons));
@@ -122,22 +122,6 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     localStorage.setItem('aura_customers', JSON.stringify(customers));
   }, [customers]);
-
-  // ================= PRODUCT OPS =================
-
-  const addProduct = (product: Product) => {
-    setAllProducts(prev => [product, ...prev]);
-  };
-
-  const editProduct = (product: Product) => {
-    setAllProducts(prev =>
-      prev.map(p => (p.id === product.id ? product : p))
-    );
-  };
-
-  const deleteProduct = (productId: string) => {
-    setAllProducts(prev => prev.filter(p => p.id !== productId));
-  };
 
   // ================= ORDERS =================
 
@@ -233,15 +217,14 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         wishlist,
         searchQuery,
         selectedCategory,
+
         allProducts,
+        setAllProducts,
+        loadProducts,
 
         adminOrders,
         customers,
         coupons,
-
-        addProduct,
-        editProduct,
-        deleteProduct,
 
         updateOrderStatus,
 

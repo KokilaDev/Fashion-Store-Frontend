@@ -38,18 +38,31 @@ export const Navbar: React.FC = () => {
 
   const handleLogout = async () => {
     try {
+      console.log('Attempting to log out user:', user?.email);
+
       await logout();
+
+      console.log('Logout successful for user:', user?.email);
+      
       setDropdownOpen(false);
+      
       navigate('/');
+
+      console.log('Logout successful. Navigated to home page.');
+
     } catch (error) {
       toast.error('Logout failed:');
       console.error('Logout failed:', error);
+
+      console.log('Logout failed. Error details:', error);
+      
     } finally {
       localStorage.removeItem('token');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
 
       navigate('/login', { replace: true });
+      console.log('User logged out. Navigated to login page.');
     }
   };
 

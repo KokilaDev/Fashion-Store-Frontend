@@ -6,7 +6,8 @@ import {
   Users, 
   BarChart3, 
   Percent, 
-  Settings2 
+  Settings2, 
+  LogOut
 } from 'lucide-react';
 import type { Order } from '../../types/types';
 
@@ -14,17 +15,19 @@ interface AdminSidebarProps {
   activeTab: 'home' | 'products' | 'orders' | 'customers' | 'reports' | 'promotions' | 'settings';
   setActiveTab: (tab: 'home' | 'products' | 'orders' | 'customers' | 'reports' | 'promotions' | 'settings') => void;
   adminOrders: Order[];
+  handleLogout: () => void;
 }
 
 export const AdminSidebar: React.FC<AdminSidebarProps> = ({ 
   activeTab, 
   setActiveTab, 
-  adminOrders 
+  adminOrders,
+  handleLogout 
 }) => {
   const processingCount = adminOrders.filter(o => o.status === 'Processing').length;
 
   return (
-    <aside className="sticky md:flex top-27 left-0 w-64 h-[calc(100vh-108px)] bg-black text-white flex-col border-r border-[#E5E1D8]/20 overflow-hidden">
+    <aside className="sticky md:flex top-0 left-0 w-64 h-screen bg-black text-white flex-col border-r border-[#E5E1D8]/20 overflow-hidden">
       {/* Sidebar Header Brand */}
       <div className="p-6 border-b border-[#E5E1D8]/10 flex flex-col">
         <div className="flex items-center gap-2">
@@ -128,7 +131,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           }`}
         >
           <Settings2 className="w-4 h-4" />
-          <span>Atelier Settings</span>
+          <span>Settings</span>
         </button>
       </nav>
 
@@ -140,6 +143,14 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
         <div className="overflow-hidden">
           <h4 className="text-[11px] font-bold tracking-wider uppercase text-white truncate">Administrator</h4>
           <p className="text-[9px] text-white/50 truncate">admin@aurafashion.com</p>
+        </div>
+        <div 
+          className="ml-5 w-9 h-9 rounded-lg flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-all duration-200"
+          title="Logout"
+        >
+          <button onClick={handleLogout}>
+            <LogOut className="w-4 h-4 text-right" />
+          </button>
         </div>
       </div>
     </aside>

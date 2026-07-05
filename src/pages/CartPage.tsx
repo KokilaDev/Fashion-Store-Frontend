@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../context/StoreContext';
-import { Trash2, ShoppingBag, ChevronRight, Plus, Minus, CreditCard, Tag, Check, RefreshCcw, LogIn } from 'lucide-react';
+import { Trash2, ShoppingBag, ChevronRight, Plus, Minus, CreditCard, Tag, Check, RefreshCcw, LogIn, MapPin } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { MOCK_COUPONS } from '../types/types';
 import { motion, AnimatePresence } from 'motion/react';
+import { useAuth } from '../hooks/useAuth';
 
 export const CartPage: React.FC = () => {
-  const { cart, updateCartQuantity, removeFromCart, currentUser, placeOrder } = useStore();
+  const { cart, updateCartQuantity, removeFromCart, placeOrder } = useStore();
+  const { user } = useAuth();
   const [promoCode, setPromoCode] = useState('');
   const [activeDiscount, setActiveDiscount] = useState(0);
   const [promoError, setPromoError] = useState('');
@@ -14,6 +16,15 @@ export const CartPage: React.FC = () => {
   const [checkingOut, setCheckingOut] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [placedOrderId, setPlacedOrderId] = useState('');
+
+  // Shipping details state
+  const [shippingName, setShippingName] = useState('');
+  const [shippingStreet, setShippingStreet] = useState('');
+  const [shippingCity, setShippingCity] = useState('');
+  const [shippingZip, setShippingZip] = useState('');
+  const [shippingPhone, setShippingPhone] = useState('');
+  const [addressError, setAddressError] = useState('');
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,7 +54,7 @@ export const CartPage: React.FC = () => {
   };
 
   const handleCheckout = () => {
-    if (!currentUser) {
+    if (!user) {
       navigate('/login?mode=login');
       return;
     }
@@ -166,6 +177,87 @@ export const CartPage: React.FC = () => {
                 </div>
               </div>
             ))}
+
+            {/* Shipping Information Card */}
+            {user && (
+              <div id="shipping-form-section" className="bg-white border border-[#E5E1D8] rounded-2xl shadow-sm p-6 space-y-4">
+                <h3 className="text-xs font-bold tracking-widest uppercase text-charcoal-900 border-b border-neutral-100 pb-3 flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-[#F27D26]" />
+                  <span>Tailoring Dispatch & Shipping Details</span>
+                </h3>
+                
+                {addressError && (
+                  <p className="text-xs text-red-600 font-semibold bg-red-50 p-2.5 rounded-lg border border-red-100 animate-pulse">
+                    {addressError}
+                  </p>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-bold tracking-wider text-neutral-400 uppercase">Recipient Full Name</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Sophia Reynolds"
+                      value={shippingName}
+                      onChange={(e) => setShippingName(e.target.value)}
+                      className="w-full px-3.5 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl bg-[#F5F2ED] text-neutral-800 text-[11px] focus:outline-none focus:ring-1 focus:ring-[#F27D26]"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-bold tracking-wider text-neutral-400 uppercase">Contact Phone Number</label>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="e.g. +1 (555) 321-4920"
+                      value={shippingPhone}
+                      onChange={(e) => setShippingPhone(e.target.value)}
+                      className="w-full px-3.5 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl bg-[#F5F2ED] text-neutral-800 text-[11px] focus:outline-none focus:ring-1 focus:ring-[#F27D26]"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[9px] font-bold tracking-wider text-neutral-400 uppercase">Street Address</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. 452 Regency Dr"
+                    value={shippingStreet}
+                    onChange={(e) => setShippingStreet(e.target.value)}
+                    className="w-full px-3.5 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl bg-[#F5F2ED] text-neutral-800 text-[11px] focus:outline-none focus:ring-1 focus:ring-[#F27D26]"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-bold tracking-wider text-neutral-400 uppercase">City & State</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Beverly Hills, CA"
+                      value={shippingCity}
+                      onChange={(e) => setShippingCity(e.target.value)}
+                      className="w-full px-3.5 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl bg-[#F5F2ED] text-neutral-800 text-[11px] focus:outline-none focus:ring-1 focus:ring-[#F27D26]"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-bold tracking-wider text-neutral-400 uppercase">ZIP / Postal Code</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. 90210"
+                      value={shippingZip}
+                      onChange={(e) => setShippingZip(e.target.value)}
+                      className="w-full px-3.5 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl bg-[#F5F2ED] text-neutral-800 text-[11px] focus:outline-none focus:ring-1 focus:ring-[#F27D26]"
+                  />
+                  </div>
+                </div>
+              </div>
+            )}
+
           </div>
 
           {/* Right Column: Order Summary (Col Span 4) */}

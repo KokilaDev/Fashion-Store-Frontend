@@ -1,10 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { useStore } from '../context/StoreContext';
-import type { Product, Order } from '../types/types';
+import type { Product, Order, ProductForm } from '../types/types';
 import { Clock, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-// Modular Sub-components
 import { AdminSidebar } from '../components/admin/AdminSidebar';
 import { AdminHome } from '../components/admin/AdminHome';
 import { AdminProducts } from '../components/admin/AdminProducts';
@@ -15,13 +14,23 @@ import { AdminPromotions } from '../components/admin/AdminPromotions';
 import { AdminSettings } from '../components/admin/AdminSettings';
 import { ProductModal } from '../components/admin/ProductModal';
 import { OrderModal } from '../components/admin/OrderModal';
+import { useAuth } from '../hooks/useAuth';
+import { logout } from '../api/authApi';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+
+import {
+  addProduct,
+  updateProduct,
+  deleteProduct
+} from '../api/productApi';
 
 export const AdminPage: React.FC = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const { 
-    allProducts, 
-    addProduct, 
-    editProduct, 
-    deleteProduct, 
+    allProducts,
+    loadProducts,
     adminOrders, 
     updateOrderStatus, 
     customers, 
@@ -30,46 +39,43 @@ export const AdminPage: React.FC = () => {
     deleteCoupon 
   } = useStore();
 
-  // Sidebar Tab Navigation State
+  // State management for active tab and filters
   const [activeTab, setActiveTab] = useState<'home' | 'products' | 'orders' | 'customers' | 'reports' | 'promotions' | 'settings'>('home');
 
-  // Search and Filter States
   const [productSearch, setProductSearch] = useState('');
   const [productCategoryFilter, setProductCategoryFilter] = useState('All');
   const [orderSearch, setOrderSearch] = useState('');
   const [orderStatusFilter, setOrderStatusFilter] = useState('All');
   const [customerSearch, setCustomerSearch] = useState('');
 
-  // Modals state
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [notifications, setNotifications] = useState<{ id: string; text: string; type: 'success' | 'error' }[]>([]);
 
-  // New product form state
-  const [productForm, setProductForm] = useState({
+  // Empty form states
+  const [productForm, setProductForm] = useState<ProductForm>({
     id: '',
     name: '',
     price: 0,
     originalPrice: 0,
-    image: '',
+    image: null,
     category: 'Frocks',
     sizes: ['S', 'M', 'L'],
     isTrending: false,
     isNew: true,
     rating: 4.8,
     description: '',
-    stock: 25 // Simulated stock
+    stock: 25
   });
 
-  // New Coupon form state
   const [couponForm, setCouponForm] = useState({
     code: '',
     discountPercent: 10,
     description: ''
   });
 
-  // Settings State
   const [settings, setSettings] = useState({
     storeName: 'AURA Fine Couture',
     emailNotification: true,
@@ -79,9 +85,6 @@ export const AdminPage: React.FC = () => {
     maintenanceMode: false
   });
 
-  // Feedback Notifications State
-  const [notifications, setNotifications] = useState<{ id: string; text: string; type: 'success' | 'error' }[]>([]);
-
   const triggerNotification = (text: string, type: 'success' | 'error' = 'success') => {
     const id = Date.now().toString();
     setNotifications((prev) => [...prev, { id, text, type }]);
@@ -90,7 +93,6 @@ export const AdminPage: React.FC = () => {
     }, 4000);
   };
 
-  // 1. General Metrics & calculations
   const totalSalesFromOrders = useMemo(() => {
     return adminOrders
       .filter(o => o.status === 'Delivered' || o.status === 'Shipped' || o.status === 'Processing')
@@ -100,15 +102,12 @@ export const AdminPage: React.FC = () => {
   const salesCount = adminOrders.length;
   const estimatedProfit = totalSalesFromOrders * 0.65; // 65% profit margins on luxury goods
 
-  // Mock product stock dictionary for luxury management (simulated since Product interface has no stock)
   const productStockMap = useMemo(() => {
-    // Generate constant stock values based on product ID to make it cohesive
     const map: Record<string, number> = {};
     allProducts.forEach((p, idx) => {
-      // Create some low stock alerts on purpose
-      if (p.id === 'p1') map[p.id] = 2; // Low stock!
-      else if (p.id === 'p3') map[p.id] = 4; // Low stock!
-      else if (p.id === 'p12') map[p.id] = 0; // Out of stock!
+      if (p.id === 'p1') map[p.id] = 2;
+      else if (p.id === 'p3') map[p.id] = 4;
+      else if (p.id === 'p12') map[p.id] = 0;
       else map[p.id] = (idx * 7 + 12) % 40;
     });
     return map;
@@ -118,7 +117,6 @@ export const AdminPage: React.FC = () => {
     return Object.keys(productStockMap).filter(key => productStockMap[key] <= 5).length;
   }, [productStockMap]);
 
-  // Chart data generators
   const monthlyRevenueData = [
     { month: 'Jan', revenue: 4200, profit: 2730, orders: 28 },
     { month: 'Feb', revenue: 5100, profit: 3315, orders: 35 },
@@ -133,14 +131,12 @@ export const AdminPage: React.FC = () => {
     const categoryTotals: Record<string, number> = {};
     adminOrders.forEach(order => {
       order.items.forEach(item => {
-        // Find category from product if possible, else default
         const prod = allProducts.find(p => p.id === item.productId);
         const cat = prod ? prod.category : 'Apparel';
         categoryTotals[cat] = (categoryTotals[cat] || 0) + (item.price * item.quantity);
       });
     });
     
-    // Default fallback values if no order items matching
     const fallback = [
       { name: 'Frocks', value: categoryTotals['Frocks'] || 4500 },
       { name: 'Suits', value: categoryTotals['Suits'] || 3200 },
@@ -154,7 +150,6 @@ export const AdminPage: React.FC = () => {
 
   const COLORS = ['#F27D26', '#1A1A1A', '#E5E1D8', '#8C857B', '#C5A880', '#D65F0E'];
 
-  // Top selling products computation
   const topSellingProducts = useMemo(() => {
     const productSales: Record<string, { product: Product; unitsSold: number; totalRev: number }> = {};
     
@@ -173,7 +168,6 @@ export const AdminPage: React.FC = () => {
 
     const list = Object.values(productSales).sort((a, b) => b.unitsSold - a.unitsSold);
     
-    // Fallback if no sales recorded yet
     if (list.length === 0) {
       return allProducts.slice(0, 4).map((p, index) => ({
         product: p,
@@ -185,7 +179,6 @@ export const AdminPage: React.FC = () => {
     return list;
   }, [adminOrders, allProducts]);
 
-  // Product filtering & searching
   const filteredProducts = useMemo(() => {
     return allProducts.filter((product) => {
       const matchesSearch = product.name.toLowerCase().includes(productSearch.toLowerCase()) || 
@@ -196,7 +189,6 @@ export const AdminPage: React.FC = () => {
     });
   }, [allProducts, productSearch, productCategoryFilter]);
 
-  // Order filtering & searching
   const filteredOrders = useMemo(() => {
     return adminOrders.filter((order) => {
       const matchesSearch = order.id.toLowerCase().includes(orderSearch.toLowerCase()) ||
@@ -206,7 +198,6 @@ export const AdminPage: React.FC = () => {
     });
   }, [adminOrders, orderSearch, orderStatusFilter]);
 
-  // Customer filtering
   const filteredCustomers = useMemo(() => {
     return customers.filter((customer) => {
       return customer.name.toLowerCase().includes(customerSearch.toLowerCase()) ||
@@ -215,54 +206,75 @@ export const AdminPage: React.FC = () => {
     });
   }, [customers, customerSearch]);
 
-  // Handle product modal submit
-  const handleProductSubmit = (e: React.FormEvent) => {
+  const handleLogout = async () => {
+    try {
+      console.log('Attempting to log out admin...', user?.email);
+      await logout();
+      console.log('Admin logged out successful.');
+      navigate('/');
+      console.log('Redirected to login page.');
+    } catch (error) {
+      toast.error('Logout failed.');
+      console.error('Logout failed:', error);
+    } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
+
+      navigate('/login', { replace: true });
+      console.log('User logged out. Navigated to login page.');
+    }
+  }
+
+  // Product Management Handlers
+  const handleProductSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!productForm.name || !productForm.price || !productForm.image) {
-      triggerNotification('Please fill in name, price, and image URL', 'error');
-      return;
-    }
 
-    if (editingProduct) {
-      // Edit mode
-      const updated: Product = {
-        ...editingProduct,
-        name: productForm.name,
-        price: Number(productForm.price),
-        originalPrice: productForm.originalPrice ? Number(productForm.originalPrice) : undefined,
-        image: productForm.image,
-        category: productForm.category,
-        description: productForm.description,
-        isTrending: productForm.isTrending,
-        isNew: productForm.isNew,
-      };
-      editProduct(updated);
-      triggerNotification(`Product "${productForm.name}" updated successfully!`);
-    } else {
-      // Add mode
-      const newId = `p-${Date.now().toString().slice(-4)}`;
-      const newProduct: Product = {
-        id: newId,
-        name: productForm.name,
-        price: Number(productForm.price),
-        originalPrice: productForm.originalPrice ? Number(productForm.originalPrice) : undefined,
-        image: productForm.image,
-        category: productForm.category,
-        sizes: productForm.sizes,
-        isTrending: productForm.isTrending,
-        isNew: productForm.isNew,
-        rating: 5.0,
-        description: productForm.description || "Premium bespoke garment styled with elegant finishes."
-      };
-      addProduct(newProduct);
-      triggerNotification(`Product "${productForm.name}" added successfully to Atelier!`);
-    }
+    try {
+      const formData = new FormData();
 
-    setIsProductModalOpen(false);
-    setEditingProduct(null);
+      formData.append("id", productForm.id);
+      formData.append("name", productForm.name);
+      formData.append("price", productForm.price.toString());
+      formData.append("category", productForm.category);
+      formData.append("description", productForm.description);
+      formData.append("isTrending", String(productForm.isTrending));
+      formData.append("isNew", String(productForm.isNew));
+
+      if (productForm.originalPrice) {
+        formData.append(
+          "originalPrice", 
+          String(productForm.originalPrice)
+        );
+      }
+
+      formData.append("sizes", JSON.stringify(productForm.sizes));
+
+      if (productForm.image instanceof File) {
+        formData.append("image", productForm.image);
+      }
+
+      if (editingProduct) {
+        await updateProduct(editingProduct.id, formData);
+        triggerNotification("Product updated successfully!");
+      } else {
+        await addProduct(formData);
+        triggerNotification("Product added successfully!");
+      }
+
+      await loadProducts();
+
+      setIsProductModalOpen(false);
+      setEditingProduct(null);
+
+    } catch (error) {
+
+      console.error("Error submitting product form:", error);
+      triggerNotification("Something went wrong", "error");
+
+    }
   };
 
-  // Prepare product form for Add Product
   const openAddProductModal = () => {
     setEditingProduct(null);
     setProductForm({
@@ -270,7 +282,7 @@ export const AdminPage: React.FC = () => {
       name: '',
       price: 0,
       originalPrice: 0,
-      image: '',
+      image: null,
       category: 'Frocks',
       sizes: ['S', 'M', 'L'],
       isTrending: false,
@@ -282,7 +294,6 @@ export const AdminPage: React.FC = () => {
     setIsProductModalOpen(true);
   };
 
-  // Prepare product form for Editing Product
   const openEditProductModal = (product: Product) => {
     setEditingProduct(product);
     setProductForm({
@@ -302,13 +313,30 @@ export const AdminPage: React.FC = () => {
     setIsProductModalOpen(true);
   };
 
-  const handleDeleteProduct = (p: Product) => {
-    if (confirm(`Are you sure you want to retire product "${p.name}" from AURA inventory?`)) {
-      deleteProduct(p.id);
-      triggerNotification(`Product "${p.name}" deleted successfully.`);
+  const handleDeleteProduct = async (p: Product) => {
+    if (!confirm("Delete product?")) return;
+
+    try {
+
+      await deleteProduct(p.id);
+      await loadProducts();
+      triggerNotification("Deleted Successfully");
+
+    } catch(err) {
+
+      console.log("Error deleting product:", err);
+      triggerNotification("Delete Failed","error");
+      
     }
   };
 
+  // Order Management Handlers
+  const handleViewOrder = (order: Order) => {
+    setSelectedOrder(order);
+    setIsOrderModalOpen(true);
+  };
+
+  // Coupon Management Handlers
   const handleCreateCoupon = (e: React.FormEvent) => {
     e.preventDefault();
     if (!couponForm.code || !couponForm.discountPercent) {
@@ -343,14 +371,10 @@ export const AdminPage: React.FC = () => {
     }, 1500);
   };
 
+  // Settings Management Handlers
   const handleSaveSettings = (e: React.FormEvent) => {
     e.preventDefault();
     triggerNotification('AURA configurations saved successfully.');
-  };
-
-  const handleViewOrder = (order: Order) => {
-    setSelectedOrder(order);
-    setIsOrderModalOpen(true);
   };
 
   return (
@@ -386,13 +410,13 @@ export const AdminPage: React.FC = () => {
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
         adminOrders={adminOrders} 
+        handleLogout={handleLogout}
       />
 
-      {/* MAIN CONTENT AREA */}
-      <main className="flex-grow p-6 md:p-8 space-y-6 overflow-y-auto max-w-[1400px]">
-        
+      <div className="flex-1 min-w-0 flex flex-col h-screen">
+
         {/* Top Header Row */}
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-[#E5E1D8]">
+        <header className="sticky top-0 z-30 h-25 bg-[#F5F2ED] border-b border-[#E5E1D8] px-8 flex items-center justify-between shadow-sm">
           <div>
             <h1 className="font-serif text-2xl sm:text-3xl font-light italic text-[#1A1A1A]">
               Atelier Management Portal
@@ -410,83 +434,88 @@ export const AdminPage: React.FC = () => {
           </div>
         </header>
 
-        {/* TAB VIEWS CONTAINER */}
-        <div className="space-y-6">
+        {/* MAIN CONTENT AREA */}
+        <main className="flex-1 w-full overflow-y-auto px-6 md:px-8 py-6">
+          
+          {/* TAB VIEWS CONTAINER */}
+          <div className="space-y-6">
 
-          {activeTab === 'home' && (
-            <AdminHome
-              totalSalesFromOrders={totalSalesFromOrders}
-              salesCount={salesCount}
-              estimatedProfit={estimatedProfit}
-              lowStockCount={lowStockCount}
-              monthlyRevenueData={monthlyRevenueData}
-              topSellingProducts={topSellingProducts}
-            />
-          )}
+            {activeTab === 'home' && (
+              <AdminHome
+                totalSalesFromOrders={totalSalesFromOrders}
+                salesCount={salesCount}
+                estimatedProfit={estimatedProfit}
+                lowStockCount={lowStockCount}
+                monthlyRevenueData={monthlyRevenueData}
+                topSellingProducts={topSellingProducts}
+              />
+            )}
 
-          {activeTab === 'products' && (
-            <AdminProducts
-              filteredProducts={filteredProducts}
-              productSearch={productSearch}
-              setProductSearch={setProductSearch}
-              productCategoryFilter={productCategoryFilter}
-              setProductCategoryFilter={setProductCategoryFilter}
-              openAddProductModal={openAddProductModal}
-              openEditProductModal={openEditProductModal}
-              handleDeleteProduct={handleDeleteProduct}
-              productStockMap={productStockMap}
-            />
-          )}
+            {activeTab === 'products' && (
+              <AdminProducts
+                filteredProducts={filteredProducts}
+                productSearch={productSearch}
+                setProductSearch={setProductSearch}
+                productCategoryFilter={productCategoryFilter}
+                setProductCategoryFilter={setProductCategoryFilter}
+                openAddProductModal={openAddProductModal}
+                openEditProductModal={openEditProductModal}
+                handleDeleteProduct={handleDeleteProduct}
+                productStockMap={productStockMap}
+              />
+            )}
 
-          {activeTab === 'orders' && (
-            <AdminOrders
-              filteredOrders={filteredOrders}
-              orderSearch={orderSearch}
-              setOrderSearch={setOrderSearch}
-              orderStatusFilter={orderStatusFilter}
-              setOrderStatusFilter={setOrderStatusFilter}
-              handleViewOrder={handleViewOrder}
-            />
-          )}
+            {activeTab === 'orders' && (
+              <AdminOrders
+                filteredOrders={filteredOrders}
+                orderSearch={orderSearch}
+                setOrderSearch={setOrderSearch}
+                orderStatusFilter={orderStatusFilter}
+                setOrderStatusFilter={setOrderStatusFilter}
+                handleViewOrder={handleViewOrder}
+              />
+            )}
 
-          {activeTab === 'customers' && (
-            <AdminCustomers
-              filteredCustomers={filteredCustomers}
-              customerSearch={customerSearch}
-              setCustomerSearch={setCustomerSearch}
-            />
-          )}
+            {activeTab === 'customers' && (
+              <AdminCustomers
+                filteredCustomers={filteredCustomers}
+                customerSearch={customerSearch}
+                setCustomerSearch={setCustomerSearch}
+              />
+            )}
 
-          {activeTab === 'reports' && (
-            <AdminReports
-              handleExport={handleExport}
-              monthlyRevenueData={monthlyRevenueData}
-              categorySalesData={categorySalesData}
-              COLORS={COLORS}
-            />
-          )}
+            {activeTab === 'reports' && (
+              <AdminReports
+                handleExport={handleExport}
+                monthlyRevenueData={monthlyRevenueData}
+                categorySalesData={categorySalesData}
+                COLORS={COLORS}
+              />
+            )}
 
-          {activeTab === 'promotions' && (
-            <AdminPromotions
-              coupons={coupons}
-              couponForm={couponForm}
-              setCouponForm={setCouponForm}
-              handleCreateCoupon={handleCreateCoupon}
-              handleDeleteCoupon={handleDeleteCoupon}
-            />
-          )}
+            {activeTab === 'promotions' && (
+              <AdminPromotions
+                coupons={coupons}
+                couponForm={couponForm}
+                setCouponForm={setCouponForm}
+                handleCreateCoupon={handleCreateCoupon}
+                handleDeleteCoupon={handleDeleteCoupon}
+              />
+            )}
 
-          {activeTab === 'settings' && (
-            <AdminSettings
-              settings={settings}
-              setSettings={setSettings}
-              handleSaveSettings={handleSaveSettings}
-            />
-          )}
+            {activeTab === 'settings' && (
+              <AdminSettings
+                settings={settings}
+                setSettings={setSettings}
+                handleSaveSettings={handleSaveSettings}
+              />
+            )}
 
-        </div>
+          </div>
 
-      </main>
+        </main>
+
+      </div>
 
       {/* ========================================================
           MODAL: ADD/EDIT PRODUCT
