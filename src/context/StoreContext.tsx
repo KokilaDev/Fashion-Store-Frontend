@@ -85,7 +85,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const loadProducts = async () => {
     try {
-      const data = await getAllProducts();
+      const data = await getAllProducts() as any;
       console.log('Products loaded successfully:', data);
       setAllProducts(data);
     } catch (error) {
@@ -95,7 +95,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const loadOrders = async () => {
     try {
-      const data = await getAllOrders();
+      const data = await getAllOrders() as any;
 
       const formattedOrders = data.orders.map((order:any)=>({
         ...order,

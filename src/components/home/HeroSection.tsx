@@ -1,15 +1,15 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useStore } from '../../context/StoreContext';
 import { ArrowRight, Sparkles, Compass } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useAuth } from '../../hooks/useAuth';
 
 export const HeroSection: React.FC = () => {
-  const { currentUser } = useStore();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const handleShopNowClick = () => {
-    if (currentUser && currentUser.isLoggedIn) {
+    if (user && user.isLoggedIn) {
       navigate('/products');
     } else {
       navigate('/login');

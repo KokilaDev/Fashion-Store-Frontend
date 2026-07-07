@@ -108,7 +108,7 @@ export const AdminReports: React.FC<AdminReportsProps> = ({
                     paddingAngle={4}
                     dataKey="value"
                   >
-                    {categorySalesData.map((entry, index) => (
+                    {categorySalesData.map((_, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
