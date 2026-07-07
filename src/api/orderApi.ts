@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api/v1/orders",
+  baseURL: "https://fashion-store-backend-red.vercel.app/api/v1/orders",
 });
 
 export const placeOrder = async (orderData: any) => {

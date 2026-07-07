@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/v1/wishlist";
+const API = "https://fashion-store-backend-red.vercel.app/api/v1/wishlist";
 
 export const getWishlistApi = (userId: string) =>
   axios.get(`${API}/${userId}`);

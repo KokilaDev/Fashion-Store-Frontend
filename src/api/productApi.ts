@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { AdminProduct } from "../types/Product";
 
-const BASE_URL = "http://localhost:5000/api/v1/products";
+const BASE_URL = "https://fashion-store-backend-red.vercel.app/api/v1/products";
 
 interface ProductsResponse {
   message: string;

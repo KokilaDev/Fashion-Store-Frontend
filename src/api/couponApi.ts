@@ -1,6 +1,9 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/v1/coupons";
+// const API = "http://localhost:5000/api/v1/coupons";
+
+const API = "https://fashion-store-backend-red.vercel.app/api/v1/coupons";
+
 
 export const getCoupons = async () => {
   const res = await axios.get(`${API}/all`);

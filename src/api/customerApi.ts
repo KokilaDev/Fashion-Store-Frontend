@@ -1,7 +1,8 @@
 import axios from "axios";
 import type { Customer } from "../types/Customer";
 
-const API_URL = "http://localhost:5000/api/v1/customers";
+// const API_URL = "http://localhost:5000/api/v1/customers";
+const API_URL = "https://fashion-store-backend-red.vercel.app/api/v1/customers";
 
 export const getAllCustomers = async (): Promise<Customer[]> => {
     const response = await axios.get(API_URL);

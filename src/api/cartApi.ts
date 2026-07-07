@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/v1/cart";
+const API = "https://fashion-store-backend-red.vercel.app/api/v1/cart";
 
 export const getCart = (userId: string) =>
     axios.get(`${API}/${userId}`);

@@ -1,9 +1,13 @@
 import axios from "axios";
 
+// const API = "http://localhost:5000/api/v1/auth";
+const API = "https://fashion-store-backend-red.vercel.app/api/v1/auth";
+
+
 export const getMyDetails = async () => {
     const token = localStorage.getItem("accessToken");
 
-    return axios.get("http://localhost:5000/api/v1/auth/me", {
+    return axios.get(`${API}/me`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -11,7 +15,7 @@ export const getMyDetails = async () => {
 };
 
 export const logout = async () => {
-  return await axios.post("http://localhost:5000/api/v1/auth/logout", 
+  return await axios.post(`${API}/logout`, 
     {},
     {
       headers: {
