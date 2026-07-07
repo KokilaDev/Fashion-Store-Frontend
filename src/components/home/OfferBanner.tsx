@@ -32,7 +32,7 @@ export const OfferBanner: React.FC = () => {
     setTimeout(() => setCopiedCode(null), 2500);
   };
 
-  const handleShopDeals = (_discount: number) => {
+  const handleShopDeals = () => {
     navigate('/products');
   };
 
@@ -119,7 +119,7 @@ export const OfferBanner: React.FC = () => {
 
               {/* CTA Button */}
               <button
-                onClick={() => handleShopDeals(activeCoupon.discountPercent)}
+                onClick={() => handleShopDeals()}
                 className="mt-2 px-6 py-2 bg-white text-black hover:bg-[#F5F2ED] font-bold text-[9px] tracking-[0.15em] uppercase rounded-full shadow-sm transition-all cursor-pointer"
               >
                 Claim {activeCoupon.discountPercent}% OFF
