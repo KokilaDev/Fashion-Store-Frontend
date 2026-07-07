@@ -111,11 +111,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                     <tr key={p.id} className="hover:bg-neutral-50/50 transition-colors">
                       <td className="p-4 flex items-center gap-3">
                         <img
-                          src={
-                            typeof p.image === "string"
-                              ? p.image
-                              : undefined
-                          }
+                          src={`http://localhost:5000/uploads/${p.image}`}
                           alt={p.name}
                           className="w-10 h-12 object-cover rounded-lg bg-neutral-100 shrink-0 border border-neutral-200"
                         />
@@ -132,16 +128,16 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                       </td>
                       <td className="p-4">
                         <div className="flex gap-1 flex-wrap">
-                          {p.sizes.map(s => (
+                          {(p.sizes ?? []).map((s) => (
                             <span key={s} className="border border-neutral-200 px-1 rounded text-[8px] font-bold text-neutral-500">{s}</span>
                           ))}
                         </div>
                       </td>
                       <td className="p-4 font-bold text-[#1A1A1A]">
-                        ${p.price.toFixed(2)}
+                        Rs.{p.price.toFixed(1)}
                         {p.originalPrice && (
                           <span className="text-[9px] text-neutral-400 line-through block font-medium">
-                            ${p.originalPrice.toFixed(2)}
+                            Rs.{p.originalPrice.toFixed(1)}
                           </span>
                         )}
                       </td>

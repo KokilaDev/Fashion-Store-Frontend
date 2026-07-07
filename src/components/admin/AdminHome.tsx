@@ -46,7 +46,7 @@ export const AdminHome: React.FC<AdminHomeProps> = ({
           </div>
           <div>
             <h3 className="font-serif text-2xl font-light text-[#1A1A1A]">
-              ${totalSalesFromOrders.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              Rs. {totalSalesFromOrders.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </h3>
             <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 mt-2">
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -82,7 +82,7 @@ export const AdminHome: React.FC<AdminHomeProps> = ({
           </div>
           <div>
             <h3 className="font-serif text-2xl font-light text-[#1A1A1A]">
-              ${estimatedProfit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              Rs. {estimatedProfit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </h3>
             <div className="flex items-center gap-1 text-[10px] font-bold text-[#F27D26] mt-2">
               <span className="font-mono bg-[#F27D26]/10 px-1.5 py-0.5 rounded">65% AVG MARGIN</span>
@@ -149,8 +149,8 @@ export const AdminHome: React.FC<AdminHomeProps> = ({
                 <XAxis dataKey="month" tickLine={false} axisLine={false} tick={{ fontSize: 10, fill: '#8C857B' }} />
                 <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 10, fill: '#8C857B' }} />
                 <Tooltip />
-                <Area type="monotone" dataKey="revenue" stroke="#F27D26" strokeWidth={2} fillOpacity={1} fill="url(#colorRevenue)" name="Revenue ($)" />
-                <Area type="monotone" dataKey="profit" stroke="#1A1A1A" strokeWidth={1.5} fillOpacity={1} fill="url(#colorProfit)" name="Net Profit ($)" />
+                <Area type="monotone" dataKey="revenue" stroke="#F27D26" strokeWidth={2} fillOpacity={1} fill="url(#colorRevenue)" name="Revenue (Rs.)" />
+                <Area type="monotone" dataKey="profit" stroke="#1A1A1A" strokeWidth={1.5} fillOpacity={1} fill="url(#colorProfit)" name="Net Profit (Rs.)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -167,7 +167,7 @@ export const AdminHome: React.FC<AdminHomeProps> = ({
             {topSellingProducts.slice(0, 4).map((item) => (
               <div key={item.product.id} className="flex items-center gap-3 border-b border-neutral-100 pb-3 last:border-0 last:pb-0">
                 <img 
-                  src={item.product.image} 
+                  src={`http://localhost:5000/uploads/${item.product.image}`} 
                   alt={item.product.name} 
                   referrerPolicy="no-referrer"
                   className="w-10 h-12 object-cover rounded-lg bg-neutral-100 shrink-0 border border-[#E5E1D8]/40"
@@ -179,7 +179,7 @@ export const AdminHome: React.FC<AdminHomeProps> = ({
                   </span>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="text-xs font-bold text-[#1A1A1A]">${item.totalRev}</p>
+                  <p className="text-xs font-bold text-[#1A1A1A]">Rs. {item.totalRev}</p>
                   <p className="text-[9px] text-neutral-400 font-medium">{item.unitsSold} units</p>
                 </div>
               </div>

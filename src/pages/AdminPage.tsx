@@ -30,8 +30,9 @@ export const AdminPage: React.FC = () => {
   const navigate = useNavigate();
   const { 
     allProducts,
+    adminOrders,
     loadProducts,
-    adminOrders, 
+    loadOrders,
     updateOrderStatus, 
     customers, 
     coupons, 
@@ -61,27 +62,28 @@ export const AdminPage: React.FC = () => {
     price: 0,
     originalPrice: 0,
     image: null,
+    imagePreview: "",
     category: 'Frocks',
-    sizes: ['S', 'M', 'L'],
+    sizes: [],
     isTrending: false,
-    isNew: true,
-    rating: 4.8,
+    isNewProduct: false,
+    rating: 0.0,
     description: '',
-    stock: 25
+    stock: 0
   });
 
   const [couponForm, setCouponForm] = useState({
     code: '',
-    discountPercent: 10,
+    discountPercent: 0,
     description: ''
   });
 
   const [settings, setSettings] = useState({
     storeName: 'AURA Fine Couture',
     emailNotification: true,
-    currency: 'USD',
-    taxRate: 8,
-    shippingFee: 15,
+    currency: 'LKR',
+    taxRate: 0.00,
+    shippingFee: 0.00,
     maintenanceMode: false
   });
 
@@ -133,7 +135,7 @@ export const AdminPage: React.FC = () => {
       order.items.forEach(item => {
         const prod = allProducts.find(p => p.id === item.productId);
         const cat = prod ? prod.category : 'Apparel';
-        categoryTotals[cat] = (categoryTotals[cat] || 0) + (item.price * item.quantity);
+        categoryTotals[cat] = (categoryTotals[cat] || 0) + (item.price * item.qty);
       });
     });
     
@@ -160,8 +162,8 @@ export const AdminPage: React.FC = () => {
           if (!productSales[prod.id]) {
             productSales[prod.id] = { product: prod, unitsSold: 0, totalRev: 0 };
           }
-          productSales[prod.id].unitsSold += item.quantity;
-          productSales[prod.id].totalRev += item.price * item.quantity;
+          productSales[prod.id].unitsSold += item.qty;
+          productSales[prod.id].totalRev += item.price * item.qty;
         }
       });
     });
@@ -188,6 +190,7 @@ export const AdminPage: React.FC = () => {
       return matchesSearch && matchesCategory;
     });
   }, [allProducts, productSearch, productCategoryFilter]);
+  console.log("Filtered Products: ", filteredProducts);
 
   const filteredOrders = useMemo(() => {
     return adminOrders.filter((order) => {
@@ -233,22 +236,23 @@ export const AdminPage: React.FC = () => {
     try {
       const formData = new FormData();
 
-      formData.append("id", productForm.id);
+      // formData.append("id", productForm.id);
       formData.append("name", productForm.name);
-      formData.append("price", productForm.price.toString());
+      formData.append("price", String(productForm.price ?? 0));
       formData.append("category", productForm.category);
       formData.append("description", productForm.description);
+      formData.append("stock", String(productForm.stock ?? 0));
       formData.append("isTrending", String(productForm.isTrending));
-      formData.append("isNew", String(productForm.isNew));
+      formData.append("isNewProduct", String(productForm.isNewProduct));
 
-      if (productForm.originalPrice) {
+      if (productForm.originalPrice !== undefined) {
         formData.append(
-          "originalPrice", 
-          String(productForm.originalPrice)
+          "originalPrice",
+          String(productForm.originalPrice ?? 0)
         );
       }
 
-      formData.append("sizes", JSON.stringify(productForm.sizes));
+      formData.append("sizes", JSON.stringify(productForm.sizes ?? []));
 
       if (productForm.image instanceof File) {
         formData.append("image", productForm.image);
@@ -283,10 +287,11 @@ export const AdminPage: React.FC = () => {
       price: 0,
       originalPrice: 0,
       image: null,
+      imagePreview: "",
       category: 'Frocks',
       sizes: ['S', 'M', 'L'],
       isTrending: false,
-      isNew: true,
+      isNewProduct: false,
       rating: 5.0,
       description: '',
       stock: 30
@@ -301,11 +306,12 @@ export const AdminPage: React.FC = () => {
       name: product.name,
       price: product.price,
       originalPrice: product.originalPrice || 0,
-      image: product.image,
+      image: null,
+      imagePreview: product.image,
       category: product.category,
       sizes: product.sizes,
       isTrending: product.isTrending,
-      isNew: product.isNew,
+      isNewProduct: product.isNewProduct,
       rating: product.rating,
       description: product.description,
       stock: productStockMap[product.id] ?? 20
@@ -331,7 +337,8 @@ export const AdminPage: React.FC = () => {
   };
 
   // Order Management Handlers
-  const handleViewOrder = (order: Order) => {
+  const handleViewOrder = async (order: Order) => {
+    await loadOrders();
     setSelectedOrder(order);
     setIsOrderModalOpen(true);
   };

@@ -83,13 +83,13 @@ export const AdminOrders: React.FC<AdminOrdersProps> = ({
                       {o.id}
                     </td>
                     <td className="p-4 text-neutral-500 font-medium">
-                      {o.date}
+                      {o.createdAt}
                     </td>
                     <td className="p-4">
                       <div className="space-y-1">
                         {o.items.map((item, idx) => (
                           <div key={idx} className="flex items-center gap-1.5 text-neutral-700">
-                            <span className="font-bold text-[#1A1A1A]">{item.quantity}x</span>
+                            <span className="font-bold text-[#1A1A1A]">{item.qty}x</span>
                             <span className="truncate max-w-[150px]">{item.name}</span>
                             <span className="text-[9px] text-neutral-400">({item.size})</span>
                           </div>
@@ -97,7 +97,7 @@ export const AdminOrders: React.FC<AdminOrdersProps> = ({
                       </div>
                     </td>
                     <td className="p-4 font-bold text-[#1A1A1A]">
-                      ${o.total.toFixed(2)}
+                      Rs. {o.total.toFixed(2)}
                     </td>
                     <td className="p-4">
                       <span className={`px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider ${

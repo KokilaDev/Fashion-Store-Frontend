@@ -11,7 +11,6 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
   const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0] || 'M');
-  const [isHovered, setIsHovered] = useState(false);
   const [showQuickView, setShowQuickView] = useState(false);
   const [addedNotification, setAddedNotification] = useState(false);
 
@@ -34,14 +33,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div 
         id={`product-card-${product.id}`}
         className="group relative flex flex-col bg-white overflow-hidden rounded-lg border border-neutral-100 transition-all duration-300 hover:shadow-lg"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
       >
         {/* Product Image Wrapper */}
         <div className="relative aspect-[3/4] w-full overflow-hidden bg-neutral-50 cursor-pointer" onClick={() => setShowQuickView(true)}>
           {/* Badges */}
           <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
-            {product.isNew && (
+            {product.isNewProduct && (
               <span className="bg-charcoal-900 text-white text-[10px] tracking-widest uppercase font-semibold px-2 py-1 rounded">
                 New
               </span>
@@ -71,7 +68,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
           {/* Main Image */}
           <img
-            src={product.image}
+            src={`http://localhost:5000/uploads/${product.image}`}
             alt={product.name}
             referrerPolicy="no-referrer"
             className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
@@ -204,12 +201,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 {/* Left Side: Image */}
                 <div className="relative aspect-[3/4] bg-neutral-50">
                   <img
-                    src={product.image}
+                    src={`http://localhost:5000/uploads/${product.image}`}
                     alt={product.name}
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover"
                   />
-                  {product.isNew && (
+                  {product.isNewProduct && (
                     <span className="absolute top-4 left-4 bg-charcoal-900 text-white text-xs uppercase tracking-widest font-bold px-3 py-1">
                       New Arrival
                     </span>
@@ -242,11 +239,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     {/* Price */}
                     <div className="flex items-baseline gap-3 mb-6">
                       <span className="text-2xl font-semibold text-charcoal-900">
-                        ${product.price.toFixed(2)}
+                        Rs. {product.price.toFixed(2)}
                       </span>
                       {product.originalPrice && (
                         <span className="text-base text-neutral-400 line-through">
-                          ${product.originalPrice.toFixed(2)}
+                          Rs. {product.originalPrice.toFixed(2)}
                         </span>
                       )}
                     </div>

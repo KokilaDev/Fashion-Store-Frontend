@@ -28,7 +28,12 @@ export const AuthProvider = ({ children }: any) => {
                 const res = await getMyDetails()
 
                 if (res.data?.data) {
-                    setUser(res.data.data)
+                    setUser({
+                        ...res.data.data,
+                        isLoggedIn: true
+                    })
+                    console.log("User fetched successfully:", res.data.data)
+                    console.log("isLoggedIn:", true)
                 } else {
                     setUser(null)
                 }

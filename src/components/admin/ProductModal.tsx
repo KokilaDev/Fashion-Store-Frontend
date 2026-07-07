@@ -3,21 +3,6 @@ import { X, UploadCloud, Trash2, Link as LinkIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import type { Product, ProductForm } from '../../types/types';
 
-// interface ProductFormState {
-//   id: string;
-//   name: string;
-//   price: number;
-//   originalPrice: number;
-//   image: string;
-//   category: string;
-//   sizes: string[];
-//   isTrending: boolean;
-//   isNew: boolean;
-//   rating: number;
-//   description: string;
-//   stock: number;
-// }
-
 interface ProductModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -48,16 +33,24 @@ export const ProductModal: React.FC<ProductModalProps> = ({
 
   const processFile = (file: File) => {
     if (!file.type.startsWith('image/')) {
-      alert('Please select a valid image file (PNG, JPG, WebP).');
+      alert("Please select a valid image file (PNG, JPEG, WEBP).");
       return;
     }
+
     const reader = new FileReader();
+
     reader.onload = (event) => {
       const result = event.target?.result;
+
       if (typeof result === 'string') {
-        setProductForm({ ...productForm, image: result });
+        setProductForm({ 
+          ...productForm, 
+          image: file,
+          imagePreview: result 
+        });
       }
     };
+
     reader.readAsDataURL(file);
   };
 
@@ -86,13 +79,15 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   const removeImage = () => {
     setProductForm({ 
       ...productForm, 
-      imageUrl: '',
-      imageFile: null 
+      imagePreview: '',
+      image: null 
     });
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
+
+  const availableSizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
   return (
     <AnimatePresence>
@@ -135,7 +130,6 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Aura Silk Evening Frock"
                   value={productForm.name}
                   onChange={(e) => setProductForm({ ...productForm, name: e.target.value })}
                   className="w-full px-3.5 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl font-semibold bg-[#F5F2ED] text-[#1A1A1A]"
@@ -144,30 +138,35 @@ export const ProductModal: React.FC<ProductModalProps> = ({
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1">Price ($)</label>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1">Price (Rs.)</label>
                   <input
                     type="number"
                     required
                     min={1}
-                    placeholder="189"
                     value={productForm.price || ''}
                     onChange={(e) => setProductForm({ ...productForm, price: Number(e.target.value) })}
                     className="w-full px-3.5 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl font-bold bg-[#F5F2ED] text-[#1A1A1A]"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1">Original Price ($ - optional)</label>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1">Original Price (Rs. - optional)</label>
                   <input
                     type="number"
-                    placeholder="e.g. 240 (for sales)"
-                    value={productForm.originalPrice || ''}
-                    onChange={(e) => setProductForm({ ...productForm, originalPrice: Number(e.target.value) })}
+                    value={productForm.originalPrice ?? ""}
+                    onChange={(e) => 
+                      setProductForm({ 
+                        ...productForm, 
+                        originalPrice: e.target.value 
+                          ? Number(e.target.value) 
+                          : undefined,
+                      })
+                    }
                     className="w-full px-3.5 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl font-bold bg-[#F5F2ED] text-[#1A1A1A]"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label className="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1">Garment Category</label>
                   <select
@@ -196,6 +195,37 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                     className="w-full px-3 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl font-bold bg-[#F5F2ED] text-[#1A1A1A]"
                   />
                 </div>
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1">
+                    Sizes
+                  </label>
+
+                  <div className="flex flex-wrap gap-2">
+                    {availableSizes.map((size) => (
+                      <label key={size} className="flex flex-col items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1">
+                        <input
+                          type="checkbox"
+                          className="accent-[#F27D26]"
+                          checked={productForm.sizes.includes(size)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setProductForm({
+                                ...productForm,
+                                sizes: [...productForm.sizes, size],
+                              });
+                            } else {
+                              setProductForm({
+                                ...productForm,
+                                sizes: productForm.sizes.filter((s) => s !== size),
+                              });
+                            }
+                          }}
+                        />
+                        {size}
+                      </label>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* IMAGE UPLOAD SECTION */}
@@ -212,25 +242,21 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                   className="hidden"
                 />
 
-                {productForm.imageFile ? (
+                {productForm.imagePreview ? (
                   // Image Preview Card
                   <div className="relative border border-[#E5E1D8] bg-[#F5F2ED] rounded-xl p-3 flex items-center gap-4">
                     <img
-                      src={
-                        typeof productForm.imageFile === "string"
-                          ? productForm.imageFile
-                          : undefined
-                      }
+                      src={productForm.imagePreview}
                       alt="Garment preview"
                       referrerPolicy="no-referrer"
                       className="w-16 h-20 object-cover rounded-lg border border-neutral-200 shadow-sm"
                     />
-                    <div className="flex-grow min-w-0">
+                    <div className="grow min-w-0">
                       <p className="font-bold text-neutral-800 text-xs truncate">Image Loaded Successfully</p>
                       <p className="text-[10px] text-neutral-400 mt-0.5">
-                        {productForm.imageUrl.startsWith('data:image') 
-                          ? 'Local uploaded file (Base64)' 
-                          : 'External web image link'}
+                        {productForm.image 
+                          ? "Local uploaded image" 
+                          : "External image URL"}
                       </p>
                       <button
                         type="button"
@@ -265,7 +291,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
 
                 {/* Optional URL Toggle / Form Field */}
                 <div className="pt-1">
-                  {!showUrlInput && !productForm.imageFile && (
+                  {!showUrlInput && !productForm.image && (
                     <button
                       type="button"
                       onClick={() => setShowUrlInput(true)}
@@ -276,7 +302,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                     </button>
                   )}
 
-                  {(showUrlInput || productForm.imageFile && !productForm.imageUrl.startsWith('data:image')) && (
+                  {(showUrlInput || productForm.image && !productForm.imagePreview.startsWith('data:image')) && (
                     <div className="mt-2 space-y-1.5">
                       <div className="flex justify-between items-center">
                         <label className="text-[9px] font-bold uppercase tracking-wider text-neutral-400">
@@ -295,11 +321,15 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                       <input
                         type="url"
                         placeholder="https://images.unsplash.com/photo-..."
-                        value={productForm.imageUrl.startsWith('data:image') ? '' : productForm.image}
+                        value={
+                          productForm.imagePreview.startsWith('data:image') 
+                          ? '' : 
+                          productForm.imagePreview
+                        }
                         onChange={(e) => setProductForm({ 
                           ...productForm, 
-                          imageUrl: result,
-                          imageFile: file
+                          imagePreview: e.target.value,
+                          image: null
                         })}
                         className="w-full px-3.5 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl bg-[#F5F2ED] text-neutral-800 text-[11px]"
                       />
@@ -312,7 +342,6 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                 <label className="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1 font-mono">Product Brief Description</label>
                 <textarea
                   rows={2}
-                  placeholder="Flowing silk silhouette with an elegant backless cut, designed for evening gatherings."
                   value={productForm.description}
                   onChange={(e) => setProductForm({ ...productForm, description: e.target.value })}
                   className="w-full px-3.5 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl bg-[#F5F2ED] text-neutral-800 text-[11px]"
@@ -334,8 +363,8 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                 <label className="flex items-center gap-2 cursor-pointer text-neutral-700">
                   <input
                     type="checkbox"
-                    checked={productForm.isNew}
-                    onChange={(e) => setProductForm({ ...productForm, isNew: e.target.checked })}
+                    checked={productForm.isNewProduct}
+                    onChange={(e) => setProductForm({ ...productForm, isNewProduct: e.target.checked })}
                     className="rounded border-neutral-300 text-[#F27D26] focus:ring-0"
                   />
                   <span>Flag as new arrival</span>

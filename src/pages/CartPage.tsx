@@ -5,10 +5,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { MOCK_COUPONS } from '../types/types';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../hooks/useAuth';
+import { placeOrder } from '../api/orderApi';
 
 export const CartPage: React.FC = () => {
-  const { cart, updateCartQuantity, removeFromCart, placeOrder } = useStore();
-  const { user } = useAuth();
+  const { cart, updateCartQuantity, removeFromCart, clearCart } = useStore();
+  const { user, loading } = useAuth();
   const [promoCode, setPromoCode] = useState('');
   const [activeDiscount, setActiveDiscount] = useState(0);
   const [promoError, setPromoError] = useState('');
@@ -18,11 +19,11 @@ export const CartPage: React.FC = () => {
   const [placedOrderId, setPlacedOrderId] = useState('');
 
   // Shipping details state
-  const [shippingName, setShippingName] = useState('');
-  const [shippingStreet, setShippingStreet] = useState('');
-  const [shippingCity, setShippingCity] = useState('');
-  const [shippingZip, setShippingZip] = useState('');
-  const [shippingPhone, setShippingPhone] = useState('');
+  const [shippingName, setShippingName] = useState(user?.name || '');
+  const [shippingStreet, setShippingStreet] = useState(user?.address || '');
+  const [shippingCity, setShippingCity] = useState(user?.city || '');
+  const [shippingZip, setShippingZip] = useState(user?.zip || '');
+  const [shippingPhone, setShippingPhone] = useState(user?.phone || '');
   const [addressError, setAddressError] = useState('');
   
   const navigate = useNavigate();
@@ -30,6 +31,10 @@ export const CartPage: React.FC = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
+
+  if(loading){
+    return <p>Loading...</p>
+  }
 
   const subtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   const discountAmount = (subtotal * activeDiscount) / 100;
@@ -53,22 +58,86 @@ export const CartPage: React.FC = () => {
     }
   };
 
-  const handleCheckout = () => {
-    if (!user) {
-      navigate('/login?mode=login');
-      return;
+  const validateAddress = () => {
+    if (!shippingName || !shippingPhone || !shippingStreet || !shippingCity || !shippingZip) {
+      setAddressError("Please fill all shipping details");
+      return false;
     }
 
-    setCheckingOut(true);
-    // Simulate payment processing
-    setTimeout(() => {
-      const order = placeOrder(activeDiscount);
-      setCheckingOut(false);
-      if (order) {
-        setPlacedOrderId(order.id);
-        setShowSuccessModal(true);
+    setAddressError('');
+    return true;
+  };
+
+  const handleCheckout = async () => {
+    try {  
+      if (!user) {
+        navigate('/login?mode=login');
+        return;
       }
-    }, 1800);
+
+      if (!validateAddress()) return;
+
+      console.log("ORDER PAYLOAD:", {
+        userId: user.id,
+        items: cart.map(item => ({
+          product: (item.product as any)._id,
+          name: item.product.name,
+          qty: item.quantity,
+          size: item.size,
+          price: item.product.price,
+          image: item.product.image
+        })),
+        shipping: {
+          name: shippingName,
+          phone: shippingPhone,
+          street: shippingStreet,
+          city: shippingCity,
+          zip: shippingZip
+        },
+        subtotal,
+        discount: discountAmount,
+        shippingFee,
+        total: finalTotal,
+        coupon: promoCode,
+        paymentMethod: "COD"
+      });
+
+      setCheckingOut(true);
+      const response = await placeOrder({
+        userId: user.id,
+        items: cart.map(item => ({
+          product: (item.product as any)._id,
+          name: item.product.name,
+          qty: item.quantity,
+          size: item.size,
+          price: item.product.price,
+          image: item.product.image
+        })),
+        shipping: {
+          name: shippingName,
+          phone: shippingPhone,
+          street: shippingStreet,
+          city: shippingCity,
+          zip: shippingZip
+        },
+        subtotal,
+        discount: discountAmount,
+        shippingFee,
+        total: finalTotal,
+        coupon: promoCode,
+        paymentMethod: "COD"
+      });
+      clearCart();
+      console.log(response.order.orderId);
+      setPlacedOrderId(response.order.orderId);
+   
+      
+      setShowSuccessModal(true);
+    } catch (error: any) {
+      console.error("Checkout failed:", error.response?.data || error.message)
+    } finally {
+      setCheckingOut(false);
+    }
   };
 
   const handleCloseSuccess = () => {
@@ -121,7 +190,7 @@ export const CartPage: React.FC = () => {
                 {/* Product Image */}
                 <div className="w-20 aspect-[3/4] bg-neutral-50 rounded overflow-hidden flex-shrink-0">
                   <img
-                    src={item.product.image}
+                    src={`http://localhost:5000/uploads/${item.product.image}`}
                     alt={item.product.name}
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover object-top"
@@ -172,7 +241,7 @@ export const CartPage: React.FC = () => {
                     <Trash2 className="w-4.5 h-4.5" />
                   </button>
                   <p className="text-sm font-bold text-charcoal-900 font-mono mt-auto">
-                    ${(item.product.price * item.quantity).toFixed(2)}
+                    Rs. {(item.product.price * item.quantity).toFixed(2)}
                   </p>
                 </div>
               </div>
@@ -198,7 +267,6 @@ export const CartPage: React.FC = () => {
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Sophia Reynolds"
                       value={shippingName}
                       onChange={(e) => setShippingName(e.target.value)}
                       className="w-full px-3.5 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl bg-[#F5F2ED] text-neutral-800 text-[11px] focus:outline-none focus:ring-1 focus:ring-[#F27D26]"
@@ -210,7 +278,6 @@ export const CartPage: React.FC = () => {
                     <input
                       type="tel"
                       required
-                      placeholder="e.g. +1 (555) 321-4920"
                       value={shippingPhone}
                       onChange={(e) => setShippingPhone(e.target.value)}
                       className="w-full px-3.5 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl bg-[#F5F2ED] text-neutral-800 text-[11px] focus:outline-none focus:ring-1 focus:ring-[#F27D26]"
@@ -223,7 +290,6 @@ export const CartPage: React.FC = () => {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. 452 Regency Dr"
                     value={shippingStreet}
                     onChange={(e) => setShippingStreet(e.target.value)}
                     className="w-full px-3.5 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl bg-[#F5F2ED] text-neutral-800 text-[11px] focus:outline-none focus:ring-1 focus:ring-[#F27D26]"
@@ -236,7 +302,6 @@ export const CartPage: React.FC = () => {
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Beverly Hills, CA"
                       value={shippingCity}
                       onChange={(e) => setShippingCity(e.target.value)}
                       className="w-full px-3.5 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl bg-[#F5F2ED] text-neutral-800 text-[11px] focus:outline-none focus:ring-1 focus:ring-[#F27D26]"
@@ -248,7 +313,6 @@ export const CartPage: React.FC = () => {
                     <input
                       type="text"
                       required
-                      placeholder="e.g. 90210"
                       value={shippingZip}
                       onChange={(e) => setShippingZip(e.target.value)}
                       className="w-full px-3.5 py-2 border border-[#E5E1D8] focus:border-[#F27D26] rounded-xl bg-[#F5F2ED] text-neutral-800 text-[11px] focus:outline-none focus:ring-1 focus:ring-[#F27D26]"
@@ -270,7 +334,7 @@ export const CartPage: React.FC = () => {
             <div className="space-y-3.5 text-xs text-neutral-600 border-b border-neutral-100 pb-4">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span className="font-bold font-mono text-charcoal-900">${subtotal.toFixed(2)}</span>
+                <span className="font-bold font-mono text-charcoal-900">Rs. {subtotal.toFixed(2)}</span>
               </div>
               
               {activeDiscount > 0 && (
@@ -279,7 +343,7 @@ export const CartPage: React.FC = () => {
                     <Tag className="w-3.5 h-3.5" />
                     <span>Coupon ({activeDiscount}% Off)</span>
                   </span>
-                  <span className="font-bold font-mono">-${discountAmount.toFixed(2)}</span>
+                  <span className="font-bold font-mono">- Rs. {discountAmount.toFixed(2)}</span>
                 </div>
               )}
 
@@ -288,13 +352,13 @@ export const CartPage: React.FC = () => {
                 {shippingFee === 0 ? (
                   <span className="text-emerald-600 font-bold uppercase tracking-wider text-[10px]">FREE SHIPPING</span>
                 ) : (
-                  <span className="font-bold font-mono text-charcoal-900">${shippingFee.toFixed(2)}</span>
+                  <span className="font-bold font-mono text-charcoal-900">Rs. {shippingFee.toFixed(2)}</span>
                 )}
               </div>
               
               {shippingFee > 0 && (
                 <p className="text-[9px] text-neutral-400 font-medium italic">
-                  Spend ${(150 - subtotal).toFixed(2)} more to unlock FREE shipping!
+                  Spend Rs. {(5000 - subtotal).toFixed(2)} more to unlock FREE shipping!
                 </p>
               )}
             </div>
@@ -302,7 +366,7 @@ export const CartPage: React.FC = () => {
             {/* Total */}
             <div className="flex justify-between items-baseline pt-1">
               <span className="text-sm font-serif font-bold text-charcoal-900">Final Total</span>
-              <span className="text-xl font-extrabold text-charcoal-900 font-mono">${finalTotal.toFixed(2)}</span>
+              <span className="text-xl font-extrabold text-charcoal-900 font-mono">Rs. {finalTotal.toFixed(2)}</span>
             </div>
 
             {/* Promo Code Form */}
@@ -330,7 +394,7 @@ export const CartPage: React.FC = () => {
 
             {/* Checkout CTA */}
             <div className="pt-2">
-              {!currentUser ? (
+              {!user ? (
                 <div className="bg-amber-50 border border-amber-200/50 p-4 rounded-xl text-center flex flex-col gap-2.5">
                   <p className="text-[11px] text-amber-800 leading-relaxed font-semibold">
                     You are currently checking out as a Guest. Join or login to earn luxury rewards.

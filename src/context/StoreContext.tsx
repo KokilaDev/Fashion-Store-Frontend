@@ -6,6 +6,7 @@ import {
   type Coupon
 } from '../types/types';
 import { getAllProducts } from '../api/productApi';
+import { getAllOrders } from '../api/orderApi';
 
 interface StoreContextType {
   cart: CartItem[];
@@ -27,6 +28,7 @@ interface StoreContextType {
   coupons: Coupon[];
 
   loadProducts: () => Promise<void>;
+  loadOrders: () => Promise<void>;
   setAllProducts: React.Dispatch<React.SetStateAction<Product[]>>;
 
   updateOrderStatus: (orderId: string, status: Order['status']) => void;
@@ -59,13 +61,9 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
-  const [cart, setCart] = useState<CartItem[]>(() =>
-    safeParse('aura_cart', [])
-  );
+  const [cart, setCart] = useState<CartItem[]>([]);
 
-  const [wishlist, setWishlist] = useState<Product[]>(() =>
-    safeParse('aura_wishlist', [])
-  );
+  const [wishlist, setWishlist] = useState<Product[]>([]);
 
   const [allProducts, setAllProducts] = useState<Product[]>([]);
 
@@ -74,9 +72,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [coupons, setCoupons] = useState<Coupon[]>([]);
 
-  const [adminOrders, setAdminOrders] = useState<Order[]>(() =>
-    safeParse('aura_admin_orders', [])
-  );
+  const [adminOrders, setAdminOrders] = useState<Order[]>([]);
 
   const [customers] = useState<{
     id: string;
@@ -94,6 +90,25 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setAllProducts(data);
     } catch (error) {
       console.error('Failed to load products:', error);
+    }
+  }
+
+  const loadOrders = async () => {
+    try {
+      const data = await getAllOrders();
+
+      const formattedOrders = data.orders.map((order:any)=>({
+        ...order,
+        id: order.orderId,
+        status: order.orderStatus
+      }));
+
+      console.log('Orders loaded successfully:', formattedOrders);
+
+      setAdminOrders(formattedOrders);
+
+    } catch(error){
+      console.error(error);
     }
   }
 
@@ -116,8 +131,8 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [coupons]);
 
   useEffect(() => {
-    localStorage.setItem('aura_admin_orders', JSON.stringify(adminOrders));
-  }, [adminOrders]);
+    loadOrders();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('aura_customers', JSON.stringify(customers));
@@ -223,6 +238,8 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         loadProducts,
 
         adminOrders,
+        loadOrders,
+        
         customers,
         coupons,
 

@@ -85,7 +85,10 @@ export const LoginPage: React.FC = () => {
 
       console.log("UserData: ", userData);
 
-      setUser(userData);
+      setUser({
+          ...userData,
+          isLoggedIn: true
+      });
 
       const role = userData?.roles || [];
 
@@ -95,10 +98,8 @@ export const LoginPage: React.FC = () => {
 
       if (role?.includes("ADMIN")) {
         navigate("/admin", { replace: true });
-        // window.location.reload();
       } else {
         navigate("/products", { replace: true });
-        // window.location.reload();
       }
 
       console.log('Navigation complete. Current path:', window.location.pathname);
@@ -161,7 +162,7 @@ export const LoginPage: React.FC = () => {
                   <input
                     type="text"
                     required
-                    placeholder="Enter your name"
+                    placeholder="Enter at least first and last name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="w-full pl-10 pr-3 py-2.5 border border-neutral-200 focus:border-charcoal-900 rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-charcoal-900 text-neutral-800 bg-neutral-50/50 focus:bg-white transition-all"

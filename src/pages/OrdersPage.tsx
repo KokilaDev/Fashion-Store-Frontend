@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FileText, ChevronRight, Package, Calendar, MapPin } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
-import { getOrderByUserApi } from '../api/orderApi';
+import { getMyOrders } from '../api/orderApi';
 import type { Order } from '../types/types';
 
 export const OrdersPage: React.FC = () => {
@@ -10,11 +10,15 @@ export const OrdersPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   const { user } = useAuth();
+  console.log("CURRENT USER:", user);
+  console.log("isLoggedIn:", user?.isLoggedIn);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!user?.isLoggedIn) {
       navigate('/login?mode=login');
+      console.log("User not logged in.");
       return;
     }
 
@@ -22,12 +26,14 @@ export const OrdersPage: React.FC = () => {
       try {
         setLoading(true);
 
-        // IMPORTANT: ensure user has id or _id
-        const userId = (user as any).id || (user as any)._id;
+        const userId = user.id;
 
-        const res = await getOrderByUserApi(userId);
+        const res = await getMyOrders(userId);
 
-        setOrders(res || []);
+        console.log("ORDERS RESPONSE:", res);
+
+        setOrders(res.orders || []);
+
       } catch (error) {
         console.error('Error fetching orders:', error);
       } finally {
@@ -107,20 +113,20 @@ export const OrdersPage: React.FC = () => {
                     <p className="text-[9px] uppercase text-neutral-400 font-bold">ORDER PLACED</p>
                     <div className="flex items-center gap-1.5">
                       <Calendar className="w-4 h-4 text-neutral-400" />
-                      <span>{order.date}</span>
+                      <span>{order.createdAt}</span>
                     </div>
                   </div>
 
                   <div>
                     <p className="text-[9px] uppercase text-neutral-400 font-bold">TOTAL PAID</p>
                     <p className="font-mono font-bold">
-                      ${order.total.toFixed(2)}
+                      Rs. {(order.total).toFixed(2)}
                     </p>
                   </div>
 
                   <div>
                     <p className="text-[9px] uppercase text-neutral-400 font-bold">ORDER ID</p>
-                    <p className="font-mono">{order.id}</p>
+                    <p className="font-mono">{order.orderId}</p>
                   </div>
 
                 </div>
@@ -146,7 +152,7 @@ export const OrdersPage: React.FC = () => {
                     {/* Item Image */}
                     <div className="w-16 aspect-[3/4] rounded bg-neutral-50 overflow-hidden flex-shrink-0">
                       <img
-                        src={item.image}
+                        src={`http://localhost:5000/uploads/${item.image}`}
                         alt={item.name}
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-cover object-top"
@@ -158,13 +164,13 @@ export const OrdersPage: React.FC = () => {
                       <h4 className="text-xs sm:text-sm font-semibold text-charcoal-900 line-clamp-1">{item.name}</h4>
                       <div className="flex items-center gap-3 text-[10px] text-neutral-400 font-bold tracking-wider mt-1.5">
                         <span className="bg-neutral-100 px-1.5 py-0.5 rounded uppercase">SIZE: {item.size}</span>
-                        <span>QUANTITY: {item.quantity}</span>
+                        <span>QUANTITY: {item.qty}</span>
                       </div>
                     </div>
 
                     {/* Price */}
                     <div className="text-right">
-                      <p className="text-xs sm:text-sm font-bold text-charcoal-900 font-mono">${(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="text-xs sm:text-sm font-bold text-charcoal-900 font-mono">${(item.price * item.qty).toFixed(2)}</p>
                       <p className="text-[9px] text-neutral-400 italic">Atelier tailored</p>
                     </div>
                   </div>
@@ -172,12 +178,12 @@ export const OrdersPage: React.FC = () => {
               </div>
 
               {/* Shipping Address Row */}
-              {order.shippingAddress && (
+              {order.shipping && (
                 <div className="px-4 sm:px-6 py-3 bg-neutral-50/30 border-t border-neutral-100 flex items-start gap-2 text-[11px] text-neutral-600">
                   <MapPin className="w-3.5 h-3.5 text-[#F27D26] shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold text-neutral-500 mr-1.5 uppercase text-[9px] tracking-wider">Shipping to:</span>
-                    <span className="font-medium text-neutral-700">{order.shippingAddress}</span>
+                    <span className="font-medium text-neutral-700">{order.shipping.street}</span>
                   </div>
                 </div>
               )}

@@ -3,11 +3,11 @@ export interface Product {
   name: string;
   price: number;
   originalPrice?: number;
-  image: string | File | null;
+  image: string;
   category: string;
   sizes: string[];
   isTrending: boolean;
-  isNew: boolean;
+  isNewProduct: boolean;
   rating: number;
   description: string;
 }
@@ -16,15 +16,15 @@ export interface ProductForm {
   id: string;
   name: string;
   price: number;
-  originalPrice: number;
+  originalPrice?: number;
 
-  imageFile: File | null;
-  imageUrl: string;
+  image: File | null;
+  imagePreview: string;
 
   category: string;
   sizes: string[];
   isTrending: boolean;
-  isNew: boolean;
+  isNewProduct: boolean;
   rating: number;
   description: string;
   stock: number;
@@ -35,17 +35,30 @@ export interface OrderItem {
   name: string;
   price: number;
   size: string;
-  quantity: number;
+  qty: number;
   image: string | File | null;
 }
 
 export interface Order {
   id: string;
-  date: string;
-  total: number;
+  orderId: string;
+  createdAt: string;
+  subtotal: number;
   items: OrderItem[];
   status: 'Processing' | 'Shipped' | 'Delivered' | 'Returned';
-  shippingAddress?: string;
+  shipping: ShippingAddress;
+  shippingFee: number;
+  total: number;
+  paymentMethod: 'PayPal' | 'COD' | 'Bank Transfer';
+  paymentStatus: 'Paid' | 'Pending' | 'Failed';
+} 
+
+export interface ShippingAddress {
+  name: string;
+  phone: string;
+  city: string;
+  street: string;
+  zip: string;
 }
 
 export interface User {
@@ -57,6 +70,10 @@ export interface User {
 
   isLoggedIn?: boolean;
   orders?: Order[];
+  phone?: string;
+  address?: string
+  city?: string;
+  zip?: string;
 }
 
 export interface CartItem {
@@ -92,7 +109,7 @@ export interface Customer {
 //     category: "Frocks",
 //     sizes: ["XS", "S", "M", "L"],
 //     isTrending: true,
-//     isNew: false,
+//     isNewProduct: false,
 //     rating: 4.9,
 //     description: "Flowing silk silhouette with an elegant backless cut, designed for evening gatherings."
 //   },
@@ -104,7 +121,7 @@ export interface Customer {
 //     category: "Frocks",
 //     sizes: ["S", "M", "L", "XL"],
 //     isTrending: false,
-//     isNew: true,
+//     isNewProduct: true,
 //     rating: 4.7,
 //     description: "Crafted from breathable organic linen, this wrap frock offers effortless daytime charm."
 //   },
@@ -116,7 +133,7 @@ export interface Customer {
 //     category: "Blouses",
 //     sizes: ["XS", "S", "M", "L"],
 //     isTrending: true,
-//     isNew: false,
+//     isNewProduct: false,
 //     rating: 4.5,
 //     description: "Sheer chiffon panels with delicate pleating and elasticated wrist bands."
 //   },
@@ -129,7 +146,7 @@ export interface Customer {
 //     category: "Tops",
 //     sizes: ["S", "M", "L"],
 //     isTrending: false,
-//     isNew: true,
+//     isNewProduct: true,
 //     rating: 4.6,
 //     description: "Glossy satin sheen with high mock collar and fluid side-drape silhouette."
 //   },
@@ -141,7 +158,7 @@ export interface Customer {
 //     category: "Skirts",
 //     sizes: ["XS", "S", "M", "L"],
 //     isTrending: true,
-//     isNew: false,
+//     isNewProduct: false,
 //     rating: 4.8,
 //     description: "A-line midi skirt featuring a structured pleat design and neat hidden zip closure."
 //   },
@@ -153,7 +170,7 @@ export interface Customer {
 //     category: "Skirts",
 //     sizes: ["S", "M", "L"],
 //     isTrending: false,
-//     isNew: true,
+//     isNewProduct: true,
 //     rating: 4.4,
 //     description: "Ultra-soft velvet slip skirt with a subtle gloss effect, perfect for transitional styling."
 //   },
@@ -166,7 +183,7 @@ export interface Customer {
 //     category: "Party Wear",
 //     sizes: ["XS", "S", "M", "L"],
 //     isTrending: true,
-//     isNew: true,
+//     isNewProduct: true,
 //     rating: 5.0,
 //     description: "All-over hand-stitched micro sequins capturing light brilliantly with every turn."
 //   },
@@ -178,7 +195,7 @@ export interface Customer {
 //     category: "Jeans",
 //     sizes: ["25", "26", "27", "28", "29", "30"],
 //     isTrending: true,
-//     isNew: false,
+//     isNewProduct: false,
 //     rating: 4.7,
 //     description: "Tailored rigid denim crafted to break in perfectly, detailed with classic silver-toned rivets."
 //   },
@@ -190,7 +207,7 @@ export interface Customer {
 //     category: "Trousers",
 //     sizes: ["XS", "S", "M", "L", "XL"],
 //     isTrending: false,
-//     isNew: true,
+//     isNewProduct: true,
 //     rating: 4.8,
 //     description: "High-waisted wide trousers featuring neat double front pleats and side slip pockets."
 //   },
@@ -203,7 +220,7 @@ export interface Customer {
 //     category: "Suits",
 //     sizes: ["S", "M", "L"],
 //     isTrending: true,
-//     isNew: false,
+//     isNewProduct: false,
 //     rating: 4.9,
 //     description: "Impeccably tailored double-breasted blazer featuring full inner silk lining and sharp peak lapels."
 //   },
@@ -215,7 +232,7 @@ export interface Customer {
 //     category: "Suits",
 //     sizes: ["S", "M", "L", "XL"],
 //     isTrending: false,
-//     isNew: true,
+//     isNewProduct: true,
 //     rating: 4.7,
 //     description: "Pressed crease trousers designed with a slim silhouette and modern adjustable waist buckles."
 //   },
@@ -227,15 +244,15 @@ export interface Customer {
 //     category: "Tops",
 //     sizes: ["XS", "S", "M", "L"],
 //     isTrending: true,
-//     isNew: true,
+//     isNewProduct: true,
 //     rating: 4.5,
 //     description: "Soft rib-knit fabric that molds comfortably to your form, detailed with a subtle square neckline."
 //   }
 // ];
 
-// export const MOCK_COUPONS: Coupon[] = [
-//   { code: "AURA15", discountPercent: 15, description: "15% OFF on Summer Collection" },
-//   { code: "ELEGANCE20", discountPercent: 20, description: "20% OFF on Party Wear and Frocks" },
-//   { code: "FIRSTBUY10", discountPercent: 10, description: "10% OFF on your very first order" },
-//   { code: "AURACLUB25", discountPercent: 25, description: "Exclusive 25% VIP Lounge Voucher" }
-// ];
+export const MOCK_COUPONS: Coupon[] = [
+  { code: "AURA15", discountPercent: 15, description: "15% OFF on Summer Collection" },
+  { code: "ELEGANCE20", discountPercent: 20, description: "20% OFF on Party Wear and Frocks" },
+  { code: "FIRSTBUY10", discountPercent: 10, description: "10% OFF on your very first order" },
+  { code: "AURACLUB25", discountPercent: 25, description: "Exclusive 25% VIP Lounge Voucher" }
+];

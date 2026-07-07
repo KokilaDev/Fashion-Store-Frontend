@@ -50,5 +50,6 @@ export const deleteProduct = async (id: string) => {
 };
 
 export const getLatestProducts = async () => {
-  return await axios.get(`${BASE_URL}/latest`);
+  const res =  await axios.get(`${BASE_URL}/latest`);
+  return res.data.products;
 }

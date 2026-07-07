@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import type { Product } from '../../types/types';
-import { getLatestProducts } from '../../services/apis';
 import { ProductCard } from '../products/ProductCard';
 import { RefreshCw, AlertCircle, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
+import { getLatestProducts } from '../../api/productApi';
 
 export const NewArrivals: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -18,7 +18,7 @@ export const NewArrivals: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const data = await getLatestProducts(shouldSimulateError);
+        const data = await getLatestProducts();
         if (active) {
           setProducts(data);
           setLoading(false);
@@ -36,7 +36,7 @@ export const NewArrivals: React.FC = () => {
     return () => {
       active = false;
     };
-  }, [retryCount, shouldSimulateError]);
+  }, [retryCount]);
 
   const handleRetry = () => {
     setRetryCount(prev => prev + 1);

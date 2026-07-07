@@ -20,6 +20,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({
   setSelectedOrder,
   triggerNotification
 }) => {
+  console.log("SELECTED ORDER:", selectedOrder);
   return (
     <AnimatePresence>
       {isOpen && selectedOrder && (
@@ -58,7 +59,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({
                   {selectedOrder.status}
                 </span>
               </div>
-              <p className="text-[10px] text-neutral-400 font-medium">Placed on: {selectedOrder.date}</p>
+              <p className="text-[10px] text-neutral-400 font-medium">Placed on: {selectedOrder.createdAt}</p>
             </div>
 
             {/* Items list */}
@@ -67,23 +68,49 @@ export const OrderModal: React.FC<OrderModalProps> = ({
               {selectedOrder.items.map((item, idx) => (
                 <div key={idx} className="flex items-center gap-3 bg-neutral-50 p-2.5 rounded-xl border border-[#E5E1D8]/40">
                   <img 
-                    src={item.image} 
+                    src={`http://localhost:5000/uploads/${item.image}`} 
                     alt={item.name} 
                     referrerPolicy="no-referrer"
                     className="w-10 h-12 object-cover rounded bg-neutral-200"
                   />
                   <div className="flex-grow">
                     <h5 className="font-bold text-neutral-800">{item.name}</h5>
-                    <p className="text-[10px] text-neutral-400">Size: {item.size} • Qty: {item.quantity}</p>
+                    <p className="text-[10px] text-neutral-400">Size: {item.size} • Qty: {item.qty}</p>
                   </div>
-                  <p className="font-bold text-neutral-800">${(item.price * item.quantity).toFixed(2)}</p>
+                  <p className="font-bold text-neutral-800">${(item.price * item.qty).toFixed(2)}</p>
                 </div>
               ))}
             </div>
 
-            <div className="flex justify-between items-center py-3 border-t border-neutral-100 font-bold text-[#1A1A1A] text-sm mb-4">
-              <span>Grand Total:</span>
-              <span>${selectedOrder.total.toFixed(2)}</span>
+            <div className="flex justify-between items-center py-3 border-t border-neutral-100 mb-2 text-sm font-bold text-[#1A1A1A]">
+              <span>{selectedOrder.shipping.name}</span>
+              <span>{selectedOrder.shipping.phone}</span>
+            </div>
+
+            <div className="flex flex-col items-center py-3 border-t border-neutral-100 mb-2">
+              <div className='flex justify-between w-full text-sm text-[#1A1A1A]/80'>
+                <span>Subtotal:</span>
+                <span>Rs. {selectedOrder.subtotal.toFixed(2)}</span>
+              </div>
+              <div className='flex justify-between w-full text-sm text-[#1A1A1A]/80'>
+                <span>Shipping Fee:</span>
+                <span>Rs. {selectedOrder.shippingFee.toFixed(2)}</span>
+              </div>
+              <div className='flex justify-between w-full text-sm mt-2 font-bold text-[#1A1A1A]'>
+                <span>Grand Total:</span>
+                <span>Rs. {selectedOrder.total.toFixed(2)}</span>
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center py-3 border-t border-neutral-100">
+              <div className='flex flex-col'>
+                <span className='text-[10px] font-bold uppercase tracking-wider text-neutral-400'>Payment Method:</span>
+                <span className='font-bold'>{selectedOrder.paymentMethod}</span>
+              </div>
+              <div className='flex flex-col'>
+                <span className='text-[10px] font-bold uppercase tracking-wider text-neutral-400'>Payment Status:</span>
+                <span className='font-bold text-right'>{selectedOrder.paymentStatus}</span>
+              </div>
             </div>
 
             {/* Shipping Address */}
@@ -93,12 +120,13 @@ export const OrderModal: React.FC<OrderModalProps> = ({
                 <span>Shipping Address</span>
               </div>
               <p className="text-[11px] text-neutral-800 leading-relaxed font-medium pl-5">
-                {selectedOrder.shippingAddress || `${selectedOrder.id} - Premium Courier Delivery`}
+                <span className="font-bold">{selectedOrder.shipping.street}</span><br />
+                {selectedOrder.shipping.city}, {selectedOrder.shipping.zip}<br />
               </p>
             </div>
 
             {/* Status Actions */}
-            <div className="space-y-2.5 border-t border-neutral-100 pt-4">
+            <div className="space-y-2 border-t border-neutral-100 pt-4">
               <h4 className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Transitions & Dispatch Controls</h4>
               <div className="grid grid-cols-3 gap-2">
                 <button
