@@ -201,7 +201,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 {/* Left Side: Image */}
                 <div className="relative aspect-[3/4] bg-neutral-50">
                   <img
-                    src={`http://localhost:5000/uploads/${product.image}`}
+                    src={`https://fashion-store-backend-red.vercel.app/uploads/${product.image}`}
                     alt={product.name}
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover"

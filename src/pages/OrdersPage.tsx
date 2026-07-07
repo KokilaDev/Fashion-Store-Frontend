@@ -152,7 +152,7 @@ export const OrdersPage: React.FC = () => {
                     {/* Item Image */}
                     <div className="w-16 aspect-[3/4] rounded bg-neutral-50 overflow-hidden flex-shrink-0">
                       <img
-                        src={`http://localhost:5000/uploads/${item.image}`}
+                        src={`https://fashion-store-backend-red.vercel.app/uploads/${item.image}`}
                         alt={item.name}
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-cover object-top"

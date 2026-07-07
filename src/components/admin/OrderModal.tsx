@@ -68,7 +68,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({
               {selectedOrder.items.map((item, idx) => (
                 <div key={idx} className="flex items-center gap-3 bg-neutral-50 p-2.5 rounded-xl border border-[#E5E1D8]/40">
                   <img 
-                    src={`http://localhost:5000/uploads/${item.image}`} 
+                    src={`https://fashion-store-backend-red.vercel.app/uploads/${item.image}`} 
                     alt={item.name} 
                     referrerPolicy="no-referrer"
                     className="w-10 h-12 object-cover rounded bg-neutral-200"

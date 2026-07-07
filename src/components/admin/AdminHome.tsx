@@ -167,7 +167,7 @@ export const AdminHome: React.FC<AdminHomeProps> = ({
             {topSellingProducts.slice(0, 4).map((item) => (
               <div key={item.product.id} className="flex items-center gap-3 border-b border-neutral-100 pb-3 last:border-0 last:pb-0">
                 <img 
-                  src={`http://localhost:5000/uploads/${item.product.image}`} 
+                  src={`https://fashion-store-backend-red.vercel.app/uploads/${item.product.image}`} 
                   alt={item.product.name} 
                   referrerPolicy="no-referrer"
                   className="w-10 h-12 object-cover rounded-lg bg-neutral-100 shrink-0 border border-[#E5E1D8]/40"

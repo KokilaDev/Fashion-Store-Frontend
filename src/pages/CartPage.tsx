@@ -190,7 +190,7 @@ export const CartPage: React.FC = () => {
                 {/* Product Image */}
                 <div className="w-20 aspect-[3/4] bg-neutral-50 rounded overflow-hidden flex-shrink-0">
                   <img
-                    src={`http://localhost:5000/uploads/${item.product.image}`}
+                    src={`https://fashion-store-backend-red.vercel.app/uploads/${item.product.image}`}
                     alt={item.product.name}
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover object-top"
