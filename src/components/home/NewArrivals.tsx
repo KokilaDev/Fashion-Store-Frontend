@@ -76,7 +76,7 @@ export const NewArrivals: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[...Array(2)].map((_, idx) => (
               <div key={idx} className="flex flex-col gap-3 animate-pulse">
-                <div className="aspect-[3/4] w-full bg-neutral-100 rounded-lg" />
+                <div className="aspect-3/4 w-full bg-neutral-100 rounded-lg" />
                 <div className="h-3 w-1/3 bg-neutral-100 rounded" />
                 <div className="h-4 w-3/4 bg-neutral-100 rounded" />
                 <div className="h-3 w-1/2 bg-neutral-100 rounded" />
