@@ -1,5 +1,3 @@
-<body>
-
 <div class="container">
 
 <h1>👗 Aura Fashion Store</h1>
@@ -144,38 +142,6 @@ frontend/
 
 <hr>
 
-<h2>⚙ Installation</h2>
-
-<h3>Clone Repository</h3>
-
-<pre>
-git clone https://github.com/your-username/aura-fashion-store.git
-
-cd aura-fashion-store
-</pre>
-
-<h3>Backend</h3>
-
-<pre>
-cd backend
-
-npm install
-
-npm run dev
-</pre>
-
-<h3>Frontend</h3>
-
-<pre>
-cd frontend
-
-npm install
-
-npm run dev
-</pre>
-
-<hr>
-
 <h2>🚀 Deployment</h2>
 
 <ul>
@@ -219,12 +185,12 @@ npm run dev
 
 <p>
 GitHub :
-https://github.com/your-github-username
+https://github.com/KokilaDev
 </p>
 
 <p>
 LinkedIn :
-https://linkedin.com/in/your-linkedin-profile
+https://www.linkedin.com/in/kokila-dewmini-799871318/
 </p>
 
 <footer>
