@@ -78,3 +78,8 @@ export const resetPassword = async (
 
   return res.data;
 };
+
+export const logout = async () => {
+  const res = await api.post("/auth/logout");
+  return res.data;
+}

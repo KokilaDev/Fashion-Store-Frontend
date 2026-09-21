@@ -5,8 +5,8 @@ import {
   type Order,
   type Coupon
 } from '../types/types';
-import { getAllProducts } from '../api/productApi';
-import { getAllOrders } from '../api/orderApi';
+import { getAllProducts } from '../services/product';
+import { getAllOrders } from '../services/order';
 
 interface StoreContextType {
   cart: CartItem[];

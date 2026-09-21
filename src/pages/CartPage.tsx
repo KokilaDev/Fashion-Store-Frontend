@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { MOCK_COUPONS } from '../types/types';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../hooks/useAuth';
-import { placeOrder } from '../api/orderApi';
+import { placeOrder } from '../services/order';
 
 export const CartPage: React.FC = () => {
   const { cart, updateCartQuantity, removeFromCart, clearCart } = useStore();

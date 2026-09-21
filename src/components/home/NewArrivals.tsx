@@ -3,7 +3,7 @@ import type { Product } from '../../types/types';
 import { ProductCard } from '../products/ProductCard';
 import { RefreshCw, AlertCircle, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
-import { getLatestProducts } from '../../api/productApi';
+import { getLatestProducts } from '../../services/product';
 
 export const NewArrivals: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);

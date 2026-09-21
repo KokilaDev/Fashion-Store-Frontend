@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FileText, ChevronRight, Package, Calendar, MapPin } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
-import { getMyOrders } from '../api/orderApi';
+import { getMyOrders } from '../services/order';
 import type { Order } from '../types/types';
 
 export const OrdersPage: React.FC = () => {

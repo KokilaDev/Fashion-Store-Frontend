@@ -15,7 +15,7 @@ import { AdminSettings } from '../components/admin/AdminSettings';
 import { ProductModal } from '../components/admin/ProductModal';
 import { OrderModal } from '../components/admin/OrderModal';
 import { useAuth } from '../hooks/useAuth';
-import { logout } from '../api/authApi';
+import { logout } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -23,7 +23,7 @@ import {
   addProduct,
   updateProduct,
   deleteProduct
-} from '../api/productApi';
+} from '../services/product';
 
 export const AdminPage: React.FC = () => {
   const { user } = useAuth();

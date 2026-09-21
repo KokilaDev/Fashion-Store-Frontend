@@ -1,7 +1,5 @@
-import axios from "axios";
-import type { AdminProduct } from "../types/Product";
-
-const BASE_URL = "https://fashion-store-backend-red.vercel.app/api/v1/products";
+import type { AdminProduct } from "../types/types";
+import api from "./api";
 
 interface ProductsResponse {
   message: string;
@@ -14,15 +12,15 @@ interface ProductResponse {
 }
 
 export const getAllProducts = async (): Promise<AdminProduct[]> => {
-  const response = await axios.get<ProductsResponse>(`${BASE_URL}/all`);
+  const response = await api.get<ProductsResponse>("/products/all");
   return response.data.products;
 };
 
 export const addProduct = async (
   data: FormData
 ): Promise<ProductResponse> => {
-  const response = await axios.post<ProductResponse>(
-    `${BASE_URL}/add`, 
+  const response = await api.post<ProductResponse>(
+    "/products/add", 
     data, 
     {
       headers: { "Content-Type": "multipart/form-data" },
@@ -35,8 +33,8 @@ export const updateProduct = async (
   id: string, 
   data: FormData
 ): Promise<ProductResponse> => {
-  const response = await axios.put<ProductResponse>(
-    `${BASE_URL}/update/${id}`, 
+  const response = await api.put<ProductResponse>(
+    `/products/update/${id}`, 
     data,
     {
       headers: { "Content-Type": "multipart/form-data" },
@@ -46,10 +44,11 @@ export const updateProduct = async (
 };
 
 export const deleteProduct = async (id: string) => {
-  return await axios.delete(`${BASE_URL}/${id}`);
+  const response = await api.delete(`/products/delete/${id}`);
+  return response.data;
 };
 
 export const getLatestProducts = async () => {
-  const res =  await axios.get(`${BASE_URL}/latest`);
+  const res =  await api.get(`/products/latest`);
   return res.data.products;
 }

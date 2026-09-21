@@ -4,7 +4,7 @@ import { useStore } from '../../context/StoreContext';
 import { Search, User, Heart, ShoppingBag, Phone, LogOut, FileText, UserCheck, ChevronDown, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../../hooks/useAuth';
-import { logout } from '../../api/authApi';
+import { logout } from '../../services/auth';
 import { toast } from 'sonner';
 
 export const Navbar: React.FC = () => {
