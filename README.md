@@ -14,7 +14,7 @@ and a powerful admin dashboard.
   <ul>
     <li>
       Frontend :
-      <a href="https://aura-fashion-store-alpha.vercel.app"
+      <a href="https://aura-fashion-store-app.vercel.app"
          class="url"
          target="_blank">
        aura-fashion-store-alpha.vercel.app
