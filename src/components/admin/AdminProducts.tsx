@@ -1,7 +1,6 @@
 import React from 'react';
 import { Search, Filter, Plus, Edit, Trash2, X } from 'lucide-react';
 import type { Product } from '../../types/types';
-import { imgSrc } from '../../utils/imageUrl';
 
 interface AdminProductsProps {
   filteredProducts: Product[];
@@ -112,7 +111,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                     <tr key={p.id} className="hover:bg-neutral-50/50 transition-colors">
                       <td className="p-4 flex items-center gap-3">
                         <img
-                          src={imgSrc(p.image)}
+                          src={p.image || "/placeholder.jpg"}
                           alt={p.name}
                           className="w-10 h-12 object-cover rounded-lg bg-neutral-100 shrink-0 border border-neutral-200"
                         />

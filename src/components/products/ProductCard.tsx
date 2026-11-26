@@ -68,7 +68,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
           {/* Main Image */}
           <img
-            src={product.image}
+            src={product.image || "/placeholder.jpg"}
             alt={product.name}
             referrerPolicy="no-referrer"
             className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
@@ -201,7 +201,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 {/* Left Side: Image */}
                 <div className="relative aspect-[3/4] bg-neutral-50">
                   <img
-                    src={product.image}
+                    src={product.image || "/placeholder.jpg"}
                     alt={product.name}
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover"

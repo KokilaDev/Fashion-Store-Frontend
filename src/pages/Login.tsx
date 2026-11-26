@@ -49,7 +49,7 @@ export const LoginPage: React.FC = () => {
 
       console.log('Registration successful. Navigating to products page.');
 
-      navigate('/products');
+      navigate('/login');
 
       console.log('Navigation complete. Current path:', window.location.pathname);
 
